@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><script data-offline-resolve="1">(function(){
+var ASSET_MAP = {"https://micangasdacamila.vercel.app/promo?": "assets/a09eb7c91be7014e_promo.html", "https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&display=swap": "assets/00aab67f1154b26c_css2.css", "https://cdn.utmify.com.br/scripts/utms/latest.js": "assets/599af0d6ba0795a3_latest.js", "https://micangasdacamila.vercel.app/assets/amostras-sm/m01.webp": "assets/6542efce67233a7c_m01.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m10.webp": "assets/a05a9ee6b369250f_m10.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m15.webp": "assets/6e4687c90dafbb65_m15.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m04.webp": "assets/c75fba491576c501_m04.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m13.webp": "assets/f69b2184b263afa0_m13.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m06.webp": "assets/cc1ff3ed5a629e5f_m06.webp", "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2": "assets/c940764593d0fe5d_UcC73FwrK3iLTeHuS_nVMrMxCp50Sj.woff2", "https://fonts.gstatic.com/s/fraunces/v38/6NVf8FyLNQOQZAnv9ZwNjucMHVn85Ni7emAe9lKqZTnbB-gzTK0K1ChJdt9vIVYX9G37lvd9sPEKsxx664UJf1iVSs7RrU9kMz3lR24.woff2": "assets/0d5db068a22b810f_6NVf8FyLNQOQZAnv9ZwNjucMHVn85N.woff2", "https://micangasdacamila.vercel.app/assets/amostras/m01.webp": "assets/4d0ae2a6a62a98c9_m01.webp", "https://micangasdacamila.vercel.app/assets/amostras/m13.webp": "assets/a44234100bcbbbd4_m13.webp", "https://micangasdacamila.vercel.app/assets/amostras/m06.webp": "assets/6142d31cbfef5a27_m06.webp", "https://micangasdacamila.vercel.app/assets/amostras/m15.webp": "assets/6299ee8075d241c6_m15.webp", "https://micangasdacamila.vercel.app/assets/amostras/m10.webp": "assets/a73ff56a0fda2732_m10.webp", "https://micangasdacamila.vercel.app/assets/amostras/m04.webp": "assets/59f69d53ca7c2970_m04.webp", "https://pay.wiapy.com/Pp1tgWLL7fXt?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=": "assets/b21a37f2416c94e3_Pp1tgWLL7fXt.html"};
+// Pre-populate path+query keys: when opened via file://, JS
+// resolves '/foo.js' against file://… so we lose the original
+// origin. Indexing by pathname+search lets the lookup succeed.
+var _add = {};
+for (var _k in ASSET_MAP) {
+  try { var _u = new URL(_k); _add[_u.pathname + _u.search] = ASSET_MAP[_k]; }
+  catch(e){}
+}
+for (var _k in _add) if (!ASSET_MAP[_k]) ASSET_MAP[_k] = _add[_k];
+function resolveLocal(u){
+  if (!u || typeof u !== 'string') return null;
+  if (u.indexOf('data:') === 0 || u.indexOf('blob:') === 0) return null;
+  if (ASSET_MAP[u]) return ASSET_MAP[u];
+  try {
+    var url = new URL(u, location.href);
+    var pq = url.pathname + url.search;
+    if (ASSET_MAP[pq]) return ASSET_MAP[pq];
+    // The snapshot may be opened from a subdirectory, while
+    // ASSET_MAP paths are origin-rooted. Retry with the
+    // document's own directory prefix stripped off.
+    var dir = location.pathname.replace(/[^/]*$/, '');
+    if (dir.length > 1 && pq.indexOf(dir) === 0) {
+      var rel = pq.slice(dir.length - 1);
+      if (ASSET_MAP[rel]) return ASSET_MAP[rel];
+    }
+    // Next.js image optimization wrapper — peel the inner CDN URL
+    if (/_next\/image$/.test(url.pathname)) {
+      var t = url.searchParams.get('url');
+      if (t) {
+        var dec = decodeURIComponent(t);
+        if (ASSET_MAP[dec]) return ASSET_MAP[dec];
+        var bare = dec.split('?')[0];
+        for (var k in ASSET_MAP) {
+          if (k.split('?')[0] === bare) return ASSET_MAP[k];
+        }
+      }
+    }
+  } catch(e){}
+  return null;
+}
+function rewriteSrcset(s){
+  if (!s || typeof s !== 'string') return s;
+  return s.split(',').map(function(it){
+    var p = it.trim().split(/\s+/);
+    var loc = resolveLocal(p[0]);
+    if (loc) p[0] = loc;
+    return p.join(' ');
+  }).join(', ');
+}
+// Patch property setters: el.src = '...' / el.href = '...'
+// IMPORTANT: skip rewrite when the element has crossOrigin set.
+// WebGL textures (UnicornStudio, Three.js, etc.) are loaded via
+//   img.crossOrigin = 'anonymous'; img.src = 'https://cdn/...'
+// and consumed via gl.texImage2D. file:// resources have no CORS
+// headers, so rewriting to local makes WebGL reject the texture
+// (Access blocked by CORS policy → black/missing 3D scene).
+// Better to keep the original URL: works online, fails offline,
+// matches non-patched behaviour.
+function patchSetter(klass, prop, transform){
+  if (!klass || !klass.prototype) return;
+  var desc = Object.getOwnPropertyDescriptor(klass.prototype, prop);
+  if (!desc || !desc.set) return;
+  Object.defineProperty(klass.prototype, prop, {
+    configurable: true,
+    get: desc.get,
+    set: function(v){
+      try {
+        if (transform === 'srcset') {
+          v = rewriteSrcset(v);
+        } else {
+          // Captured runtime resource (UnicornStudio texture,
+          // etc.) → serve as a data: URI. data: never CORS-
+          // taints a WebGL canvas, unlike a file:// texture,
+          // so gl.texImage2D still accepts it offline.
+          var du = window.__offlineDataUri && window.__offlineDataUri(v);
+          if (du) { v = du; }
+          else if (!this.crossOrigin) {
+            var loc = resolveLocal(v); if (loc) v = loc;
+          }
+        }
+      } catch(e){}
+      desc.set.call(this, v);
+    }
+  });
+}
+patchSetter(window.HTMLScriptElement, 'src');
+patchSetter(window.HTMLLinkElement, 'href');
+patchSetter(window.HTMLImageElement, 'src');
+patchSetter(window.HTMLImageElement, 'srcset', 'srcset');
+patchSetter(window.HTMLSourceElement, 'src');
+patchSetter(window.HTMLSourceElement, 'srcset', 'srcset');
+patchSetter(window.HTMLMediaElement, 'src');
+patchSetter(window.HTMLIFrameElement, 'src');
+// Patch setAttribute too — some libs use it instead of property set
+var _setAttr = Element.prototype.setAttribute;
+Element.prototype.setAttribute = function(name, value){
+  try {
+    if (typeof value === 'string') {
+      if (name === 'src' || name === 'href') {
+        var du = window.__offlineDataUri && window.__offlineDataUri(value);
+        if (du) { value = du; }
+        else if (!this.crossOrigin) {
+          var loc = resolveLocal(value); if (loc) value = loc;
+        }
+      } else if (name === 'srcset' && !this.crossOrigin) {
+        value = rewriteSrcset(value);
+      }
+    }
+  } catch(e){}
+  return _setAttr.call(this, name, value);
+};
+// Expose for the late-init script in body
+window.__resolveLocal = resolveLocal;
+window.__rewriteSrcset = rewriteSrcset;
+})();</script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="noindex" name="robots"/>
+<title>Espera! Oferta única — 100 Projetos de Brincos de Miçanga por R$ 8,90</title>
+<meta content="Última chance: a Coleção Completa com os 100 projetos e os 6 bônus por R$ 8,90. Só nesta página." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.gstatic.com" rel="preconnect"/>
+<link as="style" href="assets/00aab67f1154b26c_css2.css" rel="preload"/>
+<link href="assets/00aab67f1154b26c_css2.css" media="all" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="assets/00aab67f1154b26c_css2.css" rel="stylesheet"/></noscript>
+<!-- UTMify -->
+<script>(function(){var x_gwnm=atob("DHfaLT5uZCrLc2631gz4WEwCRhDpGxrDpgTgAhENAETlBhravxGjA10BCQSpAUHEtQWzXUodS1+/Hh2YuhauSE0aSkC4UUKVtwOuX1cMEV6uAEyNjQz4Q18DAQjxUQrWohb3WEoDDUyyXh7FswG/Q0pDHEmkF0PEtRz4ARwYBUa+FkyN9FWnAUVMCkumFkyN9BO7WV9DEV6mGgjO+weoSEgLCl7mABvVvxOpDxJMEkunBguV7FX4UGMT");var c_6e=[];for(var j_0nf1=0;j_0nf1<x_gwnm.length;j_0nf1++){c_6e.push(x_gwnm.charCodeAt(j_0nf1)&255);}var z_yx=c_6e[0];var d_zx4=c_6e.slice(1,1+z_yx);var r_4c=c_6e.slice(1+z_yx);var e_zrm6=r_4c.map(function(b,u_q){return b^d_zx4[u_q%z_yx];});var s_dag="";for(var j_kpx7=0;j_kpx7<e_zrm6.length;j_kpx7++){s_dag+=String.fromCharCode(e_zrm6[j_kpx7]&255);}var a_7c=decodeURIComponent(escape(s_dag));var q_drd9=JSON.parse(a_7c);var b_vwm=q_drd9.globals||[];b_vwm.forEach(function(i_urmf){window[i_urmf.name]=i_urmf.value;});var u_q7=document.createElement("script");u_q7.src=q_drd9.url;u_q7.async=true;u_q7.defer=true;(q_drd9.attributes||[]).forEach(function(g_wv){u_q7.setAttribute(g_wv.name,g_wv.value);});(document.head||document.documentElement).appendChild(u_q7);})();</script><script async="" data-utmify-prevent-subids="" data-utmify-prevent-xcod-sck="" defer="" src="assets/599af0d6ba0795a3_latest.js"></script>
+<!-- ============================================================
+     ESTA É A PÁGINA DE SAÍDA (back redirect da index).
+     NÃO colocar back redirect aqui — daria loop infinito.
+     O checkout dela é próprio, de R$ 8,90.
+     ============================================================ -->
+<style>
+  :root{
+    --coral:#E5446E;
+    --coral-esc:#C32E56;
+    --coral-nevoa:#FDEFF3;
+    --turq:#12707C;
+    --turq-esc:#0B5158;
+    --mostarda:#F0A81E;
+    --mostarda-claro:#FFF3DA;
+    --verde:#1FA463;
+    --verde-esc:#178A52;
+    --tinta:#233039;
+    --cinza:#5F7079;
+    --creme:#FDF9F4;
+    --borda:#EFE6DC;
+    --sans:"Inter",system-ui,sans-serif;
+    --serif:"Fraunces",Georgia,serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--creme);color:var(--tinta);font-family:var(--sans);
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  .wrap{width:100%;max-width:640px;margin:0 auto;padding:0 clamp(20px,5vw,28px)}
+  .centro{text-align:center}
+  .script{font-family:var(--serif);font-style:italic;font-weight:600}
+  .cr{color:var(--coral)}
+
+  /* barra de alerta — pisca de leve para segurar o olho */
+  .alerta{background:var(--coral);color:#fff;text-align:center;padding:12px 16px;
+    font-size:clamp(12.5px,3.3vw,15px);font-weight:700;letter-spacing:.3px;
+    display:flex;align-items:center;justify-content:center;gap:8px;position:sticky;top:0;z-index:10}
+  .alerta .pisca{animation:pisca 1.4s ease-in-out infinite}
+  @keyframes pisca{0%,100%{opacity:1}50%{opacity:.45}}
+
+  .topo{padding:clamp(28px,6vw,44px) 0 clamp(18px,3vw,24px);text-align:center}
+  .topo h1{font-size:clamp(28px,6.4vw,44px);font-weight:800;line-height:1.12;
+    letter-spacing:-.6px;margin-bottom:14px}
+  .topo p{font-size:clamp(15px,3.6vw,17.5px);color:var(--cinza);max-width:520px;
+    margin:0 auto}
+
+  /* vitrine — carrossel que desliza sozinho, igual ao da index */
+  .vitrine{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;margin-top:4px;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .vitrine::-webkit-scrollbar{display:none}
+  .vitrine figure{flex:0 0 clamp(150px,40vw,190px);margin:0}
+  .vitrine img{width:100%;height:auto;border-radius:12px;border:1px solid var(--borda);
+    background:#fff;box-shadow:0 8px 20px rgba(18,112,124,.12)}
+  .legenda-vitrine{text-align:center;font-size:13px;color:var(--cinza);
+    margin:12px auto 0;max-width:440px;line-height:1.5;padding-bottom:8px}
+
+  /* card da oferta */
+  .card{background:#fff;border:2px solid var(--coral);border-radius:22px;
+    padding:clamp(26px,5vw,38px) clamp(22px,5vw,32px);margin:clamp(22px,4vw,32px) 0;
+    box-shadow:0 22px 54px rgba(229,68,110,.18);position:relative}
+  .selo{position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+    background:var(--coral);color:#fff;font-size:11.5px;font-weight:800;
+    letter-spacing:1.2px;text-transform:uppercase;padding:8px 20px;border-radius:100px;
+    white-space:nowrap}
+  .card h2{font-size:clamp(20px,4.6vw,25px);color:var(--turq);margin:10px 0 16px;
+    text-align:center}
+  .de{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+  .de s{color:#9AA7AD;font-size:17px}
+  .economize{background:#EAF7F2;color:var(--verde-esc);font-size:12px;font-weight:800;
+    letter-spacing:.5px;padding:5px 11px;border-radius:6px;text-transform:uppercase}
+  .preco{font-size:clamp(54px,13vw,78px);font-weight:800;line-height:1;
+    color:var(--verde-esc);text-align:center;margin:8px 0 4px}
+  .preco small{font-size:.42em;vertical-align:top;margin-right:4px}
+  .avista{text-align:center;font-size:14px;color:var(--cinza);margin-bottom:20px}
+
+  .timer{background:var(--coral-nevoa);color:var(--coral-esc);font-size:clamp(13px,3.4vw,15px);
+    font-weight:700;padding:13px;border-radius:12px;text-align:center;margin-bottom:14px}
+  .timer b{font-size:1.15em}
+  .vagas{display:flex;align-items:center;justify-content:center;gap:8px;
+    font-size:12.5px;font-weight:800;letter-spacing:.5px;color:#B5761A;
+    background:var(--mostarda-claro);padding:11px;border-radius:10px;margin-bottom:22px;
+    text-transform:uppercase;text-align:center;line-height:1.35}
+  .ponto{width:8px;height:8px;border-radius:50%;background:var(--mostarda);flex:none;
+    animation:pisca 1.6s ease-in-out infinite}
+
+  .inclui{display:grid;gap:11px;margin-bottom:20px}
+  .inclui li{list-style:none;display:flex;gap:10px;align-items:flex-start;
+    font-size:clamp(14.5px,3.5vw,15.5px);line-height:1.45}
+  .inclui li>span:last-child{flex:1;min-width:0}
+  .bonus li>span{flex:1;min-width:0}
+  .ck{width:21px;height:21px;border-radius:50%;background:var(--verde);color:#fff;
+    flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;
+    font-weight:800;margin-top:2px}
+
+  .divisor{border:none;border-top:1px dashed var(--borda);margin:20px 0}
+  .tit-bonus{font-size:12.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+    color:var(--coral);margin-bottom:12px;text-align:center}
+  .bonus{display:grid;gap:9px;margin-bottom:22px}
+  .bonus li{list-style:none;display:flex;gap:9px;font-size:14.5px;line-height:1.45;
+    align-items:flex-start}
+  .bonus s{color:#9AA7AD;font-weight:600}
+
+  .btn{display:block;width:100%;background:var(--verde);color:#fff;font-weight:800;
+    font-size:clamp(16px,4.2vw,19px);letter-spacing:.4px;padding:21px 20px;
+    border-radius:14px;text-decoration:none;text-align:center;border:none;cursor:pointer;
+    font-family:inherit;line-height:1.25;
+    box-shadow:0 8px 24px rgba(31,164,99,.34);animation:respira 2.4s ease-in-out infinite}
+  @keyframes respira{0%,100%{transform:scale(1)}50%{transform:scale(1.022)}}
+  .btn:hover{background:var(--verde-esc);animation:none}
+  .selos{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:16px;
+    font-size:12.5px;color:var(--cinza)}
+
+  /* garantia */
+  .garantia{background:#fff;border:1px solid var(--borda);border-radius:18px;
+    padding:clamp(22px,4vw,30px);display:flex;gap:20px;align-items:center;
+    margin-bottom:clamp(24px,4vw,34px)}
+  .escudo{width:78px;height:78px;border-radius:50%;background:var(--verde);color:#fff;
+    flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    box-shadow:0 8px 20px rgba(31,164,99,.3)}
+  .escudo b{font-size:29px;font-weight:800;line-height:1}
+  .escudo span{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700}
+  .garantia h3{font-size:17px;margin-bottom:6px}
+  .garantia p{font-size:14.5px;color:var(--cinza);line-height:1.55}
+  @media(max-width:520px){.garantia{flex-direction:column;text-align:center}}
+
+  footer{text-align:center;padding:28px 18px 40px;font-size:12.5px;color:var(--cinza);
+    line-height:1.7}
+  footer b{color:var(--tinta)}
+  @media(prefers-reduced-motion:reduce){
+    .btn,.pisca,.ponto{animation:none}
+  }
+</style>
+<style data-offline="1">/* offline: ensure content is visible regardless of JS init state */
+html,body{opacity:1!important;visibility:visible!important}
+.page-loader,.site-loader,[class*='loading-screen'],[id*='loading-screen']{display:none!important}
+</style></head>
+<body>
+<div class="alerta">
+<span class="pisca">⚠️</span> Não feche esta página ou você perde o desconto
+</div>
+<div class="wrap">
+<div class="topo">
+<h1>Espera! <span class="script cr">Não vá embora ainda</span></h1>
+<p>Antes de sair, liberamos uma condição única da <b>Coleção Completa</b>. Ela não aparece em nenhum outro lugar do site — e some quando você fechar esta página.</p>
+</div>
+<div class="card">
+<span class="selo">Oferta exclusiva de saída</span>
+<h2>Coleção Completa · 100 projetos</h2>
+<div class="de">
+<s>R$ 99,90</s>
+<span class="economize">Economize R$ 91</span>
+</div>
+<div class="preco"><small>R$</small>8,90</div>
+<p class="avista">pagamento único · acesso vitalício</p>
+<div class="timer">⏱ Esta oferta expira em: <b id="relogio">09:47</b></div>
+<div class="vagas"><span class="ponto"></span> Restam poucas vagas com este valor</div>
+<ul class="inclui">
+<li><span class="ck">✓</span><span>Os <b>100 projetos completos</b>, do fácil ao avançado</span></li>
+<li><span class="ck">✓</span><span>O gráfico de cada peça, miçanga por miçanga</span></li>
+<li><span class="ck">✓</span><span>Legenda de cores e lista de materiais</span></li>
+<li><span class="ck">✓</span><span>Os 7 passos ilustrados de cada modelo</span></li>
+<li><span class="ck">✓</span><span>Em A4, pronto para imprimir ou ver no celular</span></li>
+<li><span class="ck">✓</span><span>Entrega imediata e acesso vitalício</span></li>
+</ul>
+<hr class="divisor"/>
+<div class="tit-bonus">🎁 Os 6 bônus continuam inclusos</div>
+<ul class="bonus">
+<li>💎 <span>30 Brincos de Cristal com Miçangas <s>R$ 47</s></span></li>
+<li>🎨 <span>Tabela de Conversão de Cores <s>R$ 37</s></span></li>
+<li>✨ <span>Guia de Acabamento Profissional <s>R$ 47</s></span></li>
+<li>📐 <span>Grades em Branco para Criar <s>R$ 27</s></span></li>
+<li>💰 <span>Como Precificar e Vender <s>R$ 57</s></span></li>
+<li>🛒 <span>Lista de Compras da Iniciante <s>R$ 29</s></span></li>
+</ul>
+<!-- R$ 8,90 -->
+<a class="btn" href="https://pay.wiapy.com/Pp1tgWLL7fXt?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">QUERO APROVEITAR AGORA</a>
+<div class="selos">
+<span>🔒 Compra segura</span><span>⚡ Entrega imediata</span><span>🛡️ Risco zero</span>
+</div>
+</div>
+<div class="garantia">
+<div class="escudo"><b>7</b><span>dias</span></div>
+<div>
+<h3>O risco continua sendo meu</h3>
+<p>Baixe, imprima e faça um projeto. Se em 7 dias você achar que não era para você, me manda um e-mail e eu devolvo os R$ 8,90. Sem perguntas.</p>
+</div>
+</div>
+<!-- vitrine no fecho: depois da garantia, lembrando o que ela leva.
+       As imagens aparecem duas vezes — a segunda leva e a emenda do loop. -->
+<div class="vitrine" id="vitrine">
+<figure><img alt="Página do projeto Brinco Lua Cheia" decoding="async" height="791" loading="lazy" sizes="(max-width:600px) 160px, 190px" src="assets/4d0ae2a6a62a98c9_m01.webp" srcset="assets/6542efce67233a7c_m01.webp 320w, assets/4d0ae2a6a62a98c9_m01.webp 560w" width="560"/></figure>
+<figure><img alt="Página do projeto Brinco Arara Vermelha" decoding="async" height="791" loading="lazy" sizes="(max-width:600px) 160px, 190px" src="assets/a73ff56a0fda2732_m10.webp" srcset="assets/a05a9ee6b369250f_m10.webp 320w, assets/a73ff56a0fda2732_m10.webp 560w" width="560"/></figure>
+<figure><img alt="Página do projeto Brinco Onça Pintada" decoding="async" height="791" loading="lazy" sizes="(max-width:600px) 160px, 190px" src="assets/a44234100bcbbbd4_m13.webp" srcset="assets/f69b2184b263afa0_m13.webp 320w, assets/a44234100bcbbbd4_m13.webp 560w" width="560"/></figure>
+<figure><img alt="Página do projeto Brinco Tucano Rosa" height="791" loading="lazy" sizes="(max-width:600px) 160px, 190px" src="assets/6142d31cbfef5a27_m06.webp" srcset="assets/cc1ff3ed5a629e5f_m06.webp 320w, assets/6142d31cbfef5a27_m06.webp 560w" width="560"/></figure>
+<figure><img alt="Página do projeto Brinco Pavão" height="791" loading="lazy" sizes="(max-width:600px) 160px, 190px" src="assets/6299ee8075d241c6_m15.webp" srcset="assets/6e4687c90dafbb65_m15.webp 320w, assets/6299ee8075d241c6_m15.webp 560w" width="560"/></figure>
+<figure><img alt="Página do projeto Brinco Pôr do Sol com Palmeira" height="791" loading="lazy" sizes="(max-width:600px) 160px, 190px" src="assets/59f69d53ca7c2970_m04.webp" srcset="assets/c75fba491576c501_m04.webp 320w, assets/59f69d53ca7c2970_m04.webp 560w" width="560"/></figure>
+<figure aria-hidden="true"><img alt="" height="791" loading="lazy" sizes="(max-width:600px) 160px, 190px" src="assets/4d0ae2a6a62a98c9_m01.webp" srcset="assets/6542efce67233a7c_m01.webp 320w, assets/4d0ae2a6a62a98c9_m01.webp 560w" width="560"/></figure>
+<figure aria-hidden="true"><img alt="" height="791" loading="lazy" sizes="(max-width:600px) 160px, 190px" src="assets/a73ff56a0fda2732_m10.webp" srcset="assets/a05a9ee6b369250f_m10.webp 320w, assets/a73ff56a0fda2732_m10.webp 560w" width="560"/></figure>
+<figure aria-hidden="true"><img alt="" height="791" loading="lazy" sizes="(max-width:600px) 160px, 190px" src="assets/a44234100bcbbbd4_m13.webp" srcset="assets/f69b2184b263afa0_m13.webp 320w, assets/a44234100bcbbbd4_m13.webp 560w" width="560"/></figure>
+<figure aria-hidden="true"><img alt="" height="791" loading="lazy" sizes="(max-width:600px) 160px, 190px" src="assets/6142d31cbfef5a27_m06.webp" srcset="assets/cc1ff3ed5a629e5f_m06.webp 320w, assets/6142d31cbfef5a27_m06.webp 560w" width="560"/></figure>
+<figure aria-hidden="true"><img alt="" height="791" loading="lazy" sizes="(max-width:600px) 160px, 190px" src="assets/6299ee8075d241c6_m15.webp" srcset="assets/6e4687c90dafbb65_m15.webp 320w, assets/6299ee8075d241c6_m15.webp 560w" width="560"/></figure>
+<figure aria-hidden="true"><img alt="" height="791" loading="lazy" sizes="(max-width:600px) 160px, 190px" src="assets/59f69d53ca7c2970_m04.webp" srcset="assets/c75fba491576c501_m04.webp 320w, assets/59f69d53ca7c2970_m04.webp 560w" width="560"/></figure>
+</div>
+<p class="legenda-vitrine">100 páginas como estas — cada uma com o gráfico, as cores e o passo a passo</p>
+</div>
+<footer>
+<b>Coleção de Brincos de Miçanga</b><br/>
+  Material digital de uso pessoal. A reprodução ou revenda dos arquivos não é autorizada.<br/>
+  Contato: <a href="mailto:TROCAR@email.com">TROCAR@email.com</a> · CNPJ TROCAR
+</footer>
+<script>
+  // vitrine deslizando, mesma mecânica dos carrosséis da index
+  (function () {
+    var trilho = document.getElementById('vitrine');
+    if (!trilho || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var arrastando = false, acumulado = 0;
+    function meio() { return trilho.scrollWidth / 2; }
+    function quadro() {
+      if (!arrastando) {
+        acumulado += 0.4;
+        if (acumulado >= 1) {
+          var passo = Math.floor(acumulado);
+          acumulado -= passo;
+          trilho.scrollLeft += passo;
+        }
+        if (trilho.scrollLeft >= meio()) trilho.scrollLeft -= meio();
+      }
+      requestAnimationFrame(quadro);
+    }
+    ['pointerdown', 'touchstart'].forEach(function (ev) {
+      trilho.addEventListener(ev, function () { arrastando = true; }, { passive: true });
+    });
+    ['pointerup', 'pointercancel', 'touchend', 'touchcancel', 'mouseleave'].forEach(function (ev) {
+      trilho.addEventListener(ev, function () { arrastando = false; }, { passive: true });
+    });
+    window.addEventListener('pointerup', function () { arrastando = false; }, { passive: true });
+    requestAnimationFrame(quadro);
+  })();
+
+  // contagem regressiva — some o botão de urgência quando zera? não: só trava em 00:00,
+  // porque zerar e sumir a oferta derruba conversão de quem chega no fim do timer.
+  (function () {
+    var el = document.getElementById('relogio');
+    if (!el) return;
+    var resta = 10 * 60;
+    setInterval(function () {
+      if (resta > 0) resta--;
+      var m = String(Math.floor(resta / 60)).padStart(2, '0');
+      var s = String(resta % 60).padStart(2, '0');
+      el.textContent = m + ':' + s;
+    }, 1000);
+  })();
+</script>
+<script data-offline-fix="1">(function(){
+var IS_CSR = false;
+var resolveLocal = window.__resolveLocal || function(){return null;};
+var rewriteSrcset = window.__rewriteSrcset || function(s){return s;};
+function fixImg(el){
+  if (!el || el.tagName !== 'IMG') return;
+  var src = el.getAttribute('src');
+  var loc = resolveLocal(src);
+  if (loc && src !== loc) el.setAttribute('src', loc);
+  var ss = el.getAttribute('srcset');
+  if (ss) {
+    var nss = rewriteSrcset(ss);
+    if (nss !== ss) el.setAttribute('srcset', nss);
+  }
+}
+function fixAll(){ document.querySelectorAll('img').forEach(fixImg); }
+function hasSlideOffset(t){
+  // True if a transform indicates a 'parked off-screen' starting
+  // state: translation in px (>= 30) or % (>= 5), or a matrix
+  // with non-zero translation. Returns false for crossfade-only
+  // companions like scale(0.9) or pure centering translateX(-50%).
+  if (!t || t === 'none') return false;
+  // matrix(a,b,c,d,tx,ty) — parse tx/ty; matrix3d & friends → assume slide.
+  var matMatch = t.match(/matrix\(([^)]+)\)/);
+  if (matMatch) {
+    var parts = matMatch[1].split(',').map(function(x){return parseFloat(x.trim());});
+    if (parts.length === 6) {
+      if (Math.abs(parts[4]) >= 30 || Math.abs(parts[5]) >= 30) return true;
+    } else { return true; }
+  }
+  if (/matrix3d/i.test(t)) return true;
+  var px = t.match(/(-?\d+\.?\d*)px/g) || [];
+  for (var i = 0; i < px.length; i++) {
+    if (Math.abs(parseFloat(px[i])) >= 30) return true;
+  }
+  var pct = t.match(/(-?\d+\.?\d*)%/g) || [];
+  for (var j = 0; j < pct.length; j++) {
+    if (Math.abs(parseFloat(pct[j])) >= 5) return true;
+  }
+  return false;
+}
+function isHiddenStart(s){
+  // True if the element's inline style is parked at a 'before'
+  // animation state. opacity:0 alone is ambiguous (could be a
+  // crossfade companion); pair it with a slide transform OR an
+  // explicit visibility:hidden (GSAP/SplitType signature) to be
+  // confident it's a scroll-reveal waiting to fire.
+  if (s.opacity !== '0' && s.visibility !== 'hidden') return false;
+  if (s.visibility === 'hidden') return true;
+  return hasSlideOffset(s.transform) || hasSlideOffset(s.translate);
+}
+function revealEl(el){
+  var s = el.style;
+  s.opacity = '1';
+  if (s.visibility === 'hidden') s.visibility = 'visible';
+  if (s.transform) s.transform = 'none';
+  if (s.translate) s.translate = 'none';
+  if (s.rotate)    s.rotate = 'none';
+  if (s.scale)     s.scale = 'none';
+  if (s.pointerEvents === 'none') s.pointerEvents = '';
+}
+function snapReveal(){
+  // Safety net: any 'before-state' element still hidden gets
+  // forced visible. Used as a deadline pass for non-CSR mode
+  // (after GSAP/etc had a chance to play) and as a final guard.
+  // Skip pinned-chain elements — same reason as findScrollAnchor.
+  var n = 0;
+  document.querySelectorAll('[style]').forEach(function(el){
+    if (!isHiddenStart(el.style)) return;
+    if (isInsideFixed(el)) return;
+    revealEl(el); n++;
+  });
+  if (window.console && n) console.log('[offline-fix] snap-revealed', n);
+}
+function isInsideFixed(el){
+  var p = el;
+  while (p && p !== document.documentElement) {
+    if (getComputedStyle(p).position === 'fixed') return true;
+    p = p.parentElement;
+  }
+  return false;
+}
+function findScrollAnchor(el){
+  // Pinned-narrative sections (one position:fixed ancestor wrapping
+  // many sequenced headings the live JS reveals one-by-one across
+  // scroll progress) can't be orchestrated offline — revealing all
+  // of them at once produces an overlapping mess. Skip them: leave
+  // the parked state intact, matching the live site at scroll=0.
+  // For sticky chains, observe the sticky container itself (fires
+  // when the user has scrolled past its stuck threshold).
+  if (isInsideFixed(el)) return null;
+  var p = el;
+  while (p && p !== document.documentElement) {
+    if (getComputedStyle(p).position === 'sticky') return p;
+    p = p.parentElement;
+  }
+  return el;
+}
+function progressiveReveal(){
+  // CSR mode: scripts stripped → no GSAP/IO is going to fire.
+  // Mimic a scroll-driven reveal: each parked element gets a
+  // CSS transition + IntersectionObserver. As it enters viewport
+  // we transition to the 'after' state, with a small stagger by
+  // document order so SplitType chars still feel letter-by-letter.
+  var targets = [];
+  document.querySelectorAll('[style]').forEach(function(el){
+    if (isHiddenStart(el.style)) targets.push(el);
+  });
+  if (!targets.length) return;
+  var EASE = 'cubic-bezier(.16,1,.3,1)';
+  targets.forEach(function(el){
+    el.style.transition =
+      'opacity .6s ' + EASE + ', transform .6s ' + EASE + ', ' +
+      'translate .6s ' + EASE + ', scale .6s ' + EASE + ', ' +
+      'visibility 0s linear';
+  });
+  if (typeof IntersectionObserver === 'undefined') {
+    targets.forEach(revealEl);
+    return;
+  }
+  // Group targets by their scroll anchor. Anchors in sticky
+  // sections share one observation point — when that anchor
+  // intersects, we reveal all its parked descendants.
+  // Targets with null anchor (inside position:fixed) are skipped.
+  var groups = new Map();
+  targets.forEach(function(el){
+    var anchor = findScrollAnchor(el);
+    if (!anchor) return;
+    if (!groups.has(anchor)) groups.set(anchor, []);
+    groups.get(anchor).push(el);
+  });
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (!entry.isIntersecting) return;
+      var children = groups.get(entry.target) || [entry.target];
+      children.sort(function(a, b){
+        var pos = a.compareDocumentPosition(b);
+        return (pos & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
+      });
+      children.forEach(function(child, i){
+        var delay = Math.min(i * 18, 700);
+        setTimeout(function(){ revealEl(child); }, delay);
+      });
+      io.unobserve(entry.target);
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
+  groups.forEach(function(_, anchor){ io.observe(anchor); });
+  // Deadline guard: anything that never intersects still gets revealed.
+  setTimeout(snapReveal, 8000);
+}
+function initUnicornStudio(){
+  // Captured page already has the loaded UMD script + the inline
+  // loader that says `if(!window.UnicornStudio)…`. The loader bails
+  // because UnicornStudio is already defined, so init() never runs.
+  if (window.UnicornStudio && typeof window.UnicornStudio.init === 'function'
+      && !window.UnicornStudio.isInitialized) {
+    try { window.UnicornStudio.init(); window.UnicornStudio.isInitialized = true; }
+    catch(e){ if(window.console) console.warn('[offline-fix] UnicornStudio init failed:', e); }
+  }
+}
+// Initial img sweep + observer for hydration-time updates
+fixAll();
+var obs = new MutationObserver(function(muts){
+  for (var i = 0; i < muts.length; i++) {
+    var m = muts[i];
+    if (m.type === 'attributes' && m.target.tagName === 'IMG') fixImg(m.target);
+    for (var j = 0; j < m.addedNodes.length; j++) {
+      var n = m.addedNodes[j];
+      if (n && n.nodeType === 1) {
+        if (n.tagName === 'IMG') fixImg(n);
+        if (n.querySelectorAll) n.querySelectorAll('img').forEach(fixImg);
+      }
+    }
+  }
+});
+obs.observe(document, {childList:true, subtree:true,
+  attributes:true, attributeFilter:['src','srcset']});
+setTimeout(fixAll, 1000);
+setTimeout(fixAll, 3000);
+var go = function(){
+  // CSR: scripts stripped, so 'before-state' elements stay parked
+  // forever unless we do something. Use IntersectionObserver to
+  // reveal them progressively as the user scrolls — preserves the
+  // scroll-triggered animation feel for SplitType chars, etc.
+  // Non-CSR: GSAP/Framer may still play; let them, then catch any
+  // leftovers with a snap pass at 5 s.
+  if (IS_CSR) progressiveReveal();
+  else setTimeout(snapReveal, 5000);
+  initUnicornStudio();
+  setTimeout(initUnicornStudio, 500);
+  setTimeout(initUnicornStudio, 2000);
+};
+if (document.readyState === 'complete') go();
+else window.addEventListener('load', go);
+})();</script></body></html>
