@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head><script data-offline-resolve="1">(function(){
 var ASSET_MAP = {"https://micangasdacamila.vercel.app/promo?": "assets/a09eb7c91be7014e_promo.html", "https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&display=swap": "assets/00aab67f1154b26c_css2.css", "https://cdn.utmify.com.br/scripts/utms/latest.js": "assets/599af0d6ba0795a3_latest.js", "https://micangasdacamila.vercel.app/assets/amostras-sm/m01.webp": "assets/6542efce67233a7c_m01.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m10.webp": "assets/a05a9ee6b369250f_m10.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m15.webp": "assets/6e4687c90dafbb65_m15.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m04.webp": "assets/c75fba491576c501_m04.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m13.webp": "assets/f69b2184b263afa0_m13.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m06.webp": "assets/cc1ff3ed5a629e5f_m06.webp", "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2": "assets/c940764593d0fe5d_UcC73FwrK3iLTeHuS_nVMrMxCp50Sj.woff2", "https://fonts.gstatic.com/s/fraunces/v38/6NVf8FyLNQOQZAnv9ZwNjucMHVn85Ni7emAe9lKqZTnbB-gzTK0K1ChJdt9vIVYX9G37lvd9sPEKsxx664UJf1iVSs7RrU9kMz3lR24.woff2": "assets/0d5db068a22b810f_6NVf8FyLNQOQZAnv9ZwNjucMHVn85N.woff2", "https://micangasdacamila.vercel.app/assets/amostras/m01.webp": "assets/4d0ae2a6a62a98c9_m01.webp", "https://micangasdacamila.vercel.app/assets/amostras/m13.webp": "assets/a44234100bcbbbd4_m13.webp", "https://micangasdacamila.vercel.app/assets/amostras/m06.webp": "assets/6142d31cbfef5a27_m06.webp", "https://micangasdacamila.vercel.app/assets/amostras/m15.webp": "assets/6299ee8075d241c6_m15.webp", "https://micangasdacamila.vercel.app/assets/amostras/m10.webp": "assets/a73ff56a0fda2732_m10.webp", "https://micangasdacamila.vercel.app/assets/amostras/m04.webp": "assets/59f69d53ca7c2970_m04.webp", "https://pay.wiapy.com/Pp1tgWLL7fXt?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=": "assets/b21a37f2416c94e3_Pp1tgWLL7fXt.html"};
+// Adiciona chave alternativa para o novo checkout PerfectPay (R$8,90)
+try {
+  ASSET_MAP["https://go.perfectpay.com.br/PPU38CQG62J?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term="] = ASSET_MAP["https://pay.wiapy.com/Pp1tgWLL7fXt?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term="];
+} catch(e) {}
+
 // Pre-populate path+query keys: when opened via file://, JS
 // resolves '/foo.js' against file://… so we lose the original
 // origin. Indexing by pathname+search lets the lookup succeed.
@@ -302,7 +307,7 @@ html,body{opacity:1!important;visibility:visible!important}
 <li>🛒 <span>Lista de Compras da Iniciante <s>R$ 29</s></span></li>
 </ul>
 <!-- R$ 8,90 -->
-<a class="btn" href="https://pay.wiapy.com/Pp1tgWLL7fXt?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">QUERO APROVEITAR AGORA</a>
+<a class="btn" href="https://go.perfectpay.com.br/PPU38CQG62J?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">QUERO APROVEITAR AGORA</a>
 <div class="selos">
 <span>🔒 Compra segura</span><span>⚡ Entrega imediata</span><span>🛡️ Risco zero</span>
 </div>
