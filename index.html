@@ -22,7 +22,7 @@
   function showNotFound() {
     document.documentElement.classList.add('blocked-device');
     var style = document.createElement('style');
-    style.textContent = 'html.blocked-device,html.blocked-device body{background:#fff!important;color:#222!important}html.blocked-device body>*{display:none!important}html.blocked-device body:before{content:"404 Not Found\\A\\AThe requested URL was not found on this server.";white-space:pre;display:block;padding:32px;font:16px Arial,sans-serif;line-height:1.5}';
+    style.textContent = 'html.blocked-device,html.blocked-device body{background:#fff!important;color:#222!important}html.blocked-device body>*{display:none!important}html.blocked-device body:before{content:"404 Not Found";position:fixed;inset:0;display:grid;place-items:center;text-align:center;font:700 clamp(42px,10vw,120px) Arial,sans-serif;line-height:1.1}';
     document.head.appendChild(style);
   }
 
