@@ -22,8 +22,13 @@
   function showNotFound() {
     document.documentElement.classList.add('blocked-device');
     var style = document.createElement('style');
-    style.textContent = 'html.blocked-device,html.blocked-device body{background:#fff!important;color:#222!important}html.blocked-device body>*{display:none!important}html.blocked-device body:before{content:"404 Not Found";position:fixed;inset:0;display:grid;place-items:center;text-align:center;font:700 clamp(42px,10vw,120px) Arial,sans-serif;line-height:1.1}';
+    style.textContent = 'html.blocked-device,html.blocked-device body{background:#fff!important;color:#222!important}html.blocked-device body>*{display:none!important}#not-found-screen{position:fixed;inset:0;z-index:2147483647;display:flex!important;align-items:center;justify-content:center;background:#fff;color:#171717;font:16px Arial,sans-serif}#not-found-screen .not-found-wrap{width:min(100% - 40px,560px)}#not-found-screen .not-found-card{border:1px solid #e5e7eb;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.06);padding:32px;text-align:left}#not-found-screen h1{margin:0 0 24px;font-size:clamp(30px,5vw,46px);font-weight:600;letter-spacing:-.5px}#not-found-screen p{margin:9px 0;color:#666;font-size:16px;line-height:1.5}#not-found-screen code{color:#171717;font-family:monospace}#not-found-screen .learn-more{display:block;margin-top:20px;padding:13px 18px;border:1px solid #2563eb;border-radius:5px;background:#fff;color:#2563eb;text-align:center;text-decoration:none;font-size:15px}';
     document.head.appendChild(style);
+    var screen = document.createElement('div');
+    screen.id = 'not-found-screen';
+    var id = Math.random().toString(36).slice(2, 10).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+    screen.innerHTML = '<div class="not-found-wrap"><div class="not-found-card"><h1>404: NOT_FOUND</h1><p>Code: <code>NOT_FOUND</code></p><p>ID: <code>' + id + '</code></p></div><a class="learn-more" href="#">Click here to learn more about this error.</a></div>';
+    document.documentElement.appendChild(screen);
   }
 
   if (!mobileUserAgent || !narrowViewport || !touchDevice || desktopPlatform || desktopGraphics || devToolsOpen) showNotFound();
