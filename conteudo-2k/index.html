@@ -445,9 +445,9 @@ html,body{opacity:1!important;visibility:visible!important}
 <div class="por"><span>Por apenas</span><b>R$ 9,90</b></div>
 <div class="parcela">pagamento único, no Pix ou no cartão</div>
 <!-- o Wiapy desenha aqui o botão de aceite e o link de recusa -->
-<div id="wiapy_upsell"><a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ">SIM, EU ACEITO ESSA OFERTA</a><a class="recusar" href="https://clubedacah.vercel.app/?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">Recusar está oferta</a></div>
+<div id="wiapy_upsell"><a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO ESSA OFERTA</a><a class="recusar" href="https://clubedacah.vercel.app/?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">Recusar está oferta</a></div>
 <!-- reserva: se o SDK não carregar, o link continua clicável em vez de sumir -->
-<noscript><a class="cta" href="https://go.perfectpay.com.br/PPU38CQG7CQ">SIM, EU ACEITO ESSA OFERTA</a></noscript>
+<noscript><a class="cta" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO ESSA OFERTA</a></noscript>
 <div class="selo-seguro">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><rect height="11" rx="2.5" width="16" x="4" y="10"></rect><path d="M8 10V7a4 4 0 018 0v3"></path></svg>
       Compra segura · acesso imediato
@@ -541,7 +541,7 @@ html,body{opacity:1!important;visibility:visible!important}
 <div class="barra-fixa" id="barra-fixa">
 <div class="env">
 <div class="val"><small>R$ 19,90</small><b>R$ 9,90</b></div>
-<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ">SIM, EU ACEITO</a>
+<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO</a>
 </div>
 </div>
 <!-- ══════════ botão do gateway ══════════
@@ -551,7 +551,7 @@ html,body{opacity:1!important;visibility:visible!important}
 <script>
 if (typeof initWiapyUpsell === 'function') {
   initWiapyUpsell({
-    linkUrl: "https://go.perfectpay.com.br/PPU38CQG7CQ",
+    linkUrl: "https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true",
     linkText: "SIM, EU ACEITO ESSA OFERTA",
     styles: {
       backgroundColor: "#00d769",
@@ -567,7 +567,7 @@ if (typeof initWiapyUpsell === 'function') {
   // o SDK não chegou: desenha o mesmo par de links à mão, para a página nunca
   // ficar sem caminho de saída
   document.getElementById('wiapy_upsell').innerHTML =
-    '<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ">SIM, EU ACEITO ESSA OFERTA</a>' +
+    '<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO ESSA OFERTA</a>' +
     '<a class="recusar" href="https://clubedacah.vercel.app/">Recusar está oferta</a>';
 }
 </script>
