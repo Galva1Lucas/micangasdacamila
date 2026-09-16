@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><script data-offline-resolve="1">(function(){
+var ASSET_MAP = {"https://micangasdacamila.vercel.app/upsell2?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=": "assets/3de2524c95d49abf_dows.html", "https://cdn.utmify.com.br/scripts/utms/latest.js": "assets/599af0d6ba0795a3_latest.js", "https://micangasdacamila.vercel.app/upsell2/assets/ups/dep2.webp": "assets/53adaaca1d5ac3a5_dep2.webp", "https://micangasdacamila.vercel.app/upsell2/assets/ups/garantia.webp": "assets/da5cf79193a41cc1_garantia.webp", "https://micangasdacamila.vercel.app/upsell2/assets/ups/dep3.webp": "assets/51c5f737d03cc0aa_dep3.webp", "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap": "assets/5dc7b53a81e0e77c_css2.css", "https://fonts.gstatic.com/s/ibmplexsans/v23/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxeKYbSB4Zh.woff2": "assets/056e4e2459f57a00_zYXzKVElMYYaJe8bpLHnCwDKr932-G.woff2", "https://fonts.gstatic.com/s/bricolagegrotesque/v9/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2": "assets/85f55a58a31e61a2_3y9K6as8bTXq_nANBjzKo3IeZx8z6u.woff2", "https://micangasdacamila.vercel.app/upsell2/assets/ups/video.webp": "assets/fcf9979fac1548d6_video.webp", "https://micangasdacamila.vercel.app/upsell2/assets/ups/dep1.webp": "assets/106449b39d83646c_dep1.webp", "https://micangasdacamila.vercel.app/?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=": "assets/467f887cfcca25b4_file.html", "https://go.perfectpay.com.br/PPU38CQG7CQ": "assets/b578c28f0f8cabc9_6aa1e08aa3b1f406fa7ab24d.html", "https://go.perfectpay.com.br/PPU38CQG7CQ?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=": "assets/48b53d80c90a703f_6aa1e08aa3b1f406fa7ab24d.html"};
+// Pre-populate path+query keys: when opened via file://, JS
+// resolves '/foo.js' against file://… so we lose the original
+// origin. Indexing by pathname+search lets the lookup succeed.
+var _add = {};
+for (var _k in ASSET_MAP) {
+  try { var _u = new URL(_k); _add[_u.pathname + _u.search] = ASSET_MAP[_k]; }
+  catch(e){}
+}
+for (var _k in _add) if (!ASSET_MAP[_k]) ASSET_MAP[_k] = _add[_k];
+function resolveLocal(u){
+  if (!u || typeof u !== 'string') return null;
+  if (u.indexOf('data:') === 0 || u.indexOf('blob:') === 0) return null;
+  if (ASSET_MAP[u]) return ASSET_MAP[u];
+  try {
+    var url = new URL(u, location.href);
+    var pq = url.pathname + url.search;
+    if (ASSET_MAP[pq]) return ASSET_MAP[pq];
+    // The snapshot may be opened from a subdirectory, while
+    // ASSET_MAP paths are origin-rooted. Retry with the
+    // document's own directory prefix stripped off.
+    var dir = location.pathname.replace(/[^/]*$/, '');
+    if (dir.length > 1 && pq.indexOf(dir) === 0) {
+      var rel = pq.slice(dir.length - 1);
+      if (ASSET_MAP[rel]) return ASSET_MAP[rel];
+    }
+    // Next.js image optimization wrapper — peel the inner CDN URL
+    if (/_next\/image$/.test(url.pathname)) {
+      var t = url.searchParams.get('url');
+      if (t) {
+        var dec = decodeURIComponent(t);
+        if (ASSET_MAP[dec]) return ASSET_MAP[dec];
+        var bare = dec.split('?')[0];
+        for (var k in ASSET_MAP) {
+          if (k.split('?')[0] === bare) return ASSET_MAP[k];
+        }
+      }
+    }
+  } catch(e){}
+  return null;
+}
+function rewriteSrcset(s){
+  if (!s || typeof s !== 'string') return s;
+  return s.split(',').map(function(it){
+    var p = it.trim().split(/\s+/);
+    var loc = resolveLocal(p[0]);
+    if (loc) p[0] = loc;
+    return p.join(' ');
+  }).join(', ');
+}
+// Patch property setters: el.src = '...' / el.href = '...'
+// IMPORTANT: skip rewrite when the element has crossOrigin set.
+// WebGL textures (UnicornStudio, Three.js, etc.) are loaded via
+//   img.crossOrigin = 'anonymous'; img.src = 'https://cdn/...'
+// and consumed via gl.texImage2D. file:// resources have no CORS
+// headers, so rewriting to local makes WebGL reject the texture
+// (Access blocked by CORS policy → black/missing 3D scene).
+// Better to keep the original URL: works online, fails offline,
+// matches non-patched behaviour.
+function patchSetter(klass, prop, transform){
+  if (!klass || !klass.prototype) return;
+  var desc = Object.getOwnPropertyDescriptor(klass.prototype, prop);
+  if (!desc || !desc.set) return;
+  Object.defineProperty(klass.prototype, prop, {
+    configurable: true,
+    get: desc.get,
+    set: function(v){
+      try {
+        if (transform === 'srcset') {
+          v = rewriteSrcset(v);
+        } else {
+          // Captured runtime resource (UnicornStudio texture,
+          // etc.) → serve as a data: URI. data: never CORS-
+          // taints a WebGL canvas, unlike a file:// texture,
+          // so gl.texImage2D still accepts it offline.
+          var du = window.__offlineDataUri && window.__offlineDataUri(v);
+          if (du) { v = du; }
+          else if (!this.crossOrigin) {
+            var loc = resolveLocal(v); if (loc) v = loc;
+          }
+        }
+      } catch(e){}
+      desc.set.call(this, v);
+    }
+  });
+}
+patchSetter(window.HTMLScriptElement, 'src');
+patchSetter(window.HTMLLinkElement, 'href');
+patchSetter(window.HTMLImageElement, 'src');
+patchSetter(window.HTMLImageElement, 'srcset', 'srcset');
+patchSetter(window.HTMLSourceElement, 'src');
+patchSetter(window.HTMLSourceElement, 'srcset', 'srcset');
+patchSetter(window.HTMLMediaElement, 'src');
+patchSetter(window.HTMLIFrameElement, 'src');
+// Patch setAttribute too — some libs use it instead of property set
+var _setAttr = Element.prototype.setAttribute;
+Element.prototype.setAttribute = function(name, value){
+  try {
+    if (typeof value === 'string') {
+      if (name === 'src' || name === 'href') {
+        var du = window.__offlineDataUri && window.__offlineDataUri(value);
+        if (du) { value = du; }
+        else if (!this.crossOrigin) {
+          var loc = resolveLocal(value); if (loc) value = loc;
+        }
+      } else if (name === 'srcset' && !this.crossOrigin) {
+        value = rewriteSrcset(value);
+      }
+    }
+  } catch(e){}
+  return _setAttr.call(this, name, value);
+};
+// Expose for the late-init script in body
+window.__resolveLocal = resolveLocal;
+window.__rewriteSrcset = rewriteSrcset;
+})();</script>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="#e5446e" name="theme-color"/>
+<meta content="noindex,nofollow" name="robots"/>
+<title>Última chance · Miçangas na Prática</title>
+<link href="assets/favicon.png" rel="icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="assets/5dc7b53a81e0e77c_css2.css" media="all" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="assets/5dc7b53a81e0e77c_css2.css" rel="stylesheet"/></noscript>
+<!-- SDK do Wiapy: é ele que define initWiapyUpsell(), usado lá embaixo para desenhar
+     o botão de aceite e o de recusa. SEM ELE A FUNÇÃO NÃO EXISTE e nenhum botão
+     aparece — a página cai no botão de reserva que está no HTML.
+     >>> CONFIRMAR A URL NO PAINEL DA WIAPY: é a linha que eles mandam colar no <head>. -->
+<script async="" src="https://wiapy.com/js/upsell.js"></script>
+<!-- UTMify: o mesmo script da index, para a venda do upsell cair no mesmo painel -->
+<script async="" data-utmify-prevent-subids="" data-utmify-prevent-xcod-sck="" defer="" src="assets/599af0d6ba0795a3_latest.js"></script>
+<style>
+:root{
+  --rosa:#ec3a72; --rosa-esc:#cc2f58; --rosa-fundo:#fff5f8; --rosa-linha:#f5d4de;
+  --tinta:#0e1120; --tinta-2:#4b5163; --cinza:#6b7280;
+  --branco:#fff; --papel:#f7f8fa; --linha:#e8ebef;
+  --serif:'Bricolage Grotesque',system-ui,sans-serif;
+  --sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0; background:var(--papel); color:var(--tinta);
+  font-family:var(--sans); -webkit-font-smoothing:antialiased;
+  padding-bottom:78px;                     /* a barra fixa do botão */
+}
+img{display:block; max-width:100%}
+.env{width:100%; max-width:460px; margin:0 auto; padding:0 12px}
+
+/* ══════════ contador ══════════ */
+/* É um cronômetro DE VERDADE, em JS, e não a animação SVG do bloco de checkout:
+   numa página própria dá para expirar de fato, e oferta que "expira" e continua
+   ali para sempre queima a confiança de quem volta. */
+.faixa-tempo{
+  background:linear-gradient(135deg,var(--rosa),var(--rosa-esc));
+  color:#fff; position:sticky; top:0; z-index:30;
+  box-shadow:0 2px 14px rgba(204,47,88,.28);
+}
+.faixa-tempo .env{
+  display:flex; align-items:center; justify-content:center; gap:11px;
+  padding:11px 12px;
+}
+.faixa-tempo b{
+  font-family:var(--serif); font-weight:600; font-size:15px; letter-spacing:.2px;
+}
+.relogio{display:flex; align-items:center; gap:4px}
+.digito{
+  background:rgba(0,0,0,.22); border-radius:8px;
+  min-width:30px; padding:5px 3px; text-align:center;
+  font-size:20px; font-weight:800; line-height:1;
+  font-variant-numeric:tabular-nums lining-nums;
+}
+.doispontos{font-size:19px; font-weight:800; opacity:.85; animation:pisca 1s steps(1) infinite}
+@keyframes pisca{50%{opacity:.2}}
+.faixa-tempo.acabou{background:#4b5163; box-shadow:none}
+
+/* ══════════ topo: a compra que acabou de acontecer ══════════ */
+.aprovado{
+  background:#eaf7ef; border-bottom:1px solid #cdebd8;
+  color:#1c7a45; text-align:center;
+}
+.aprovado .env{display:flex; align-items:center; justify-content:center; gap:8px; padding:10px 12px}
+.aprovado svg{width:17px; height:17px; flex:0 0 auto}
+.aprovado span{font-size:13px; font-weight:600; line-height:1.35}
+
+/* ══════════ bloco do upsell ══════════ */
+.ob-upsell{width:100%; max-width:460px; margin:0 auto; padding:20px 16px 6px; text-align:center}
+.ob-upsell__tag{
+  display:inline-block; font-family:var(--sans); font-weight:600;
+  font-size:11.5px; letter-spacing:1.1px; text-transform:uppercase;
+  font-variant-numeric:tabular-nums lining-nums;
+  color:#fff; background:var(--rosa);
+  padding:7px 15px 6px; border-radius:999px; margin-bottom:14px;
+  box-shadow:0 4px 12px rgba(236,58,114,.28);
+}
+.ob-upsell__headline{
+  font-family:var(--serif); font-weight:800; font-size:28px; line-height:1.18;
+  letter-spacing:-.8px; color:var(--tinta); margin:0 0 22px; text-wrap:balance;
+}
+/* o ::after fica atrás do texto: por isso o em precisa de isolation, senão o
+   z-index:-1 some por baixo do fundo da página em vez de ficar sob a palavra */
+.ob-upsell__headline .linha-2{
+  display:block; margin-top:9px;
+  font-size:.95em; font-weight:600; line-height:1.28; letter-spacing:-.4px;
+}
+.ob-upsell__headline em{
+  font-style:normal; color:var(--rosa); position:relative; white-space:nowrap; isolation:isolate;
+}
+.ob-upsell__headline em::after{
+  content:""; position:absolute; left:0; right:0; bottom:-1px; height:7px;
+  background:rgba(236,58,114,.16); border-radius:4px; z-index:-1;
+}
+.ob-upsell__media{border-radius:14px; overflow:hidden; line-height:0; box-shadow:0 8px 24px rgba(16,20,40,.12)}
+.ob-upsell__media img{width:100%; height:auto}
+.ob-upsell__intro{
+  margin:22px 0 20px; padding-bottom:18px;
+  border-bottom:1px solid rgba(14,17,32,.08);
+  font-size:15px; line-height:1.6; color:var(--tinta-2); text-wrap:pretty;
+}
+.ob-upsell__intro strong{font-weight:600; color:var(--rosa)}
+.ob-upsell__intro em{font-style:normal; font-weight:600; color:var(--tinta)}
+.titulo-lista{
+  font-family:var(--serif); font-weight:800; font-size:19px; line-height:1.25;
+  letter-spacing:-.5px; color:var(--tinta); text-align:center;
+  margin:8px 0 18px; position:relative; padding-bottom:14px;
+}
+/* um tracinho rosa embaixo, curto e centrado: fecha o titulo sem pesar */
+.titulo-lista::after{
+  content:""; position:absolute; left:50%; transform:translateX(-50%);
+  bottom:0; width:46px; height:3px; border-radius:99px; background:var(--rosa);
+}
+.ob-upsell__list{display:flex; flex-direction:column; gap:16px; text-align:left}
+.ob-upsell__item{display:flex; align-items:flex-start; gap:11px}
+.ob-upsell__icon{
+  flex:0 0 22px; width:22px; height:22px; margin-top:1px; border-radius:50%;
+  background:rgba(236,58,114,.12); color:var(--rosa);
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.ob-upsell__icon svg{width:13px; height:13px}
+.ob-upsell__item p{margin:0; font-size:14px; line-height:1.55; color:var(--tinta-2)}
+.ob-upsell__item strong{font-weight:600; color:var(--tinta)}
+
+/* ══════════ preço e botão ══════════ */
+.oferta{
+  background:var(--branco); border:1px solid var(--linha); border-radius:14px;
+  padding:22px 16px 18px; margin:4px 0 32px; text-align:center;
+  box-shadow:0 6px 20px rgba(16,20,40,.07);
+}
+.oferta .de{font-size:14px; color:var(--cinza); text-decoration:line-through}
+.oferta .por{
+  display:flex; align-items:baseline; justify-content:center; gap:8px; margin-top:5px;
+}
+.oferta .por span{font-size:14px; font-weight:600; color:var(--tinta-2)}
+.oferta .por b{
+  font-family:var(--serif); font-weight:800; font-size:41px; line-height:1;
+  letter-spacing:-1.6px; color:var(--rosa);
+}
+.oferta .parcela{margin-top:7px; font-size:13px; color:var(--cinza)}
+.cta{
+  display:flex; align-items:center; justify-content:center; gap:9px;
+  width:100%; margin-top:15px;
+  background:linear-gradient(180deg,#f2497e,var(--rosa) 55%,var(--rosa-esc));
+  color:#fff; font-family:var(--sans); font-size:16px; font-weight:700;
+  letter-spacing:.2px; text-decoration:none;
+  padding:17px 18px; border:0; border-radius:12px; cursor:pointer;
+  box-shadow:0 8px 22px -5px rgba(236,58,114,.55);
+  animation:respira 2.6s ease-in-out infinite;
+}
+.cta:active{transform:translateY(1px)}
+@keyframes respira{50%{transform:scale(1.018)}}
+.cta svg{width:18px; height:18px; flex:0 0 auto}
+/* o gateway pinta o botão de verde; o resto da página é rosa. Mantido porque
+   verde de "aceitar" é convenção de checkout e converte melhor que a cor da marca. */
+.cta-verde{
+  background:#00d769; box-shadow:0 8px 22px -5px rgba(0,180,90,.5); animation:none;
+}
+.cta-verde:hover{background:#00b85a}
+#wiapy_upsell{margin-top:15px}
+#wiapy_upsell a{display:block}
+.oferta .de s{text-decoration:line-through}
+.selo-seguro{
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  margin-top:11px; font-size:12px; color:var(--cinza);
+}
+.selo-seguro svg{width:13px; height:13px}
+.recusar{
+  display:block; width:100%; margin:14px 0 0; padding:10px;
+  background:none; border:0; cursor:pointer;
+  font-family:var(--sans); font-size:13px; color:var(--cinza);
+  text-decoration:underline; text-underline-offset:3px;
+}
+.recusar:hover{color:var(--tinta-2)}
+
+/* ══════════ depoimentos e garantia ══════════ */
+.secao-titulo{
+  text-align:center; font-family:var(--serif); font-weight:800;
+  font-size:18px; letter-spacing:-.4px; color:var(--tinta); margin:26px 0 12px;
+}
+.dep{
+  background:var(--branco); border:1px solid var(--linha); border-radius:12px;
+  padding:13px 14px; margin-bottom:9px;
+}
+.dep-topo{display:flex; align-items:center; gap:11px; margin-bottom:9px}
+.dep-topo img{
+  flex:0 0 42px; width:42px; height:42px; border-radius:50%;
+  object-fit:cover; border:2px solid #f1f3f6;
+}
+.dep-nome{font-size:14.5px; font-weight:700; color:#111827; line-height:1.25}
+.dep-estrelas{font-size:12px; color:#e5446e; letter-spacing:1.7px; line-height:1.3}
+.dep-texto{font-size:14px; line-height:1.5; color:#374151}
+
+.garantia{
+  background:linear-gradient(180deg,#fffdfd,var(--rosa-fundo));
+  border:1px solid var(--rosa-linha); border-radius:12px;
+  padding:14px; margin-top:12px;
+}
+.garantia-topo{display:flex; align-items:center; flex-wrap:wrap; justify-content:center; gap:13px}
+.garantia-topo img{flex:0 0 72px; width:72px; height:72px; object-fit:contain}
+.garantia-txt{flex:1 1 190px; min-width:0}
+.garantia-txt b{display:block; font-size:17px; font-weight:700; color:#111827; line-height:1.3; margin-bottom:4px}
+.garantia-txt p{margin:0; font-size:13px; line-height:1.45; color:#4b5563}
+.garantia-txt strong{color:#111827}
+.garantia-pe{
+  margin-top:11px; padding-top:10px; border-top:1px solid var(--rosa-linha);
+  text-align:center; font-size:12.5px; color:#b03256; font-weight:600; line-height:1.4;
+}
+
+/* ══════════ barra fixa ══════════ */
+/* O botão sai da vista quando a pessoa desce para ler os depoimentos; a barra
+   devolve o preço e a ação sem obrigar a rolar de volta. */
+.barra-fixa{
+  position:fixed; left:0; right:0; bottom:0; z-index:40;
+  background:rgba(255,255,255,.97); backdrop-filter:saturate(180%) blur(12px);
+  border-top:1px solid var(--linha);
+  box-shadow:0 -6px 24px rgba(16,20,40,.09);
+  padding-bottom:env(safe-area-inset-bottom);
+  transform:translateY(110%); transition:transform .26s ease;
+}
+.barra-fixa.on{transform:none}
+.barra-fixa .env{display:flex; align-items:center; gap:11px; padding:10px 12px}
+.barra-fixa .val{flex:0 0 auto; line-height:1.15}
+.barra-fixa .val small{display:block; font-size:11px; color:var(--cinza); text-decoration:line-through}
+.barra-fixa .val b{font-family:var(--serif); font-weight:800; font-size:19px; color:var(--rosa); letter-spacing:-.5px}
+.barra-fixa .cta{margin:0; flex:1; padding:14px 12px; font-size:14.5px; animation:none}
+
+/* ── confirmação da recusa ── */
+.modal{
+  position:fixed; inset:0; z-index:60;
+  background:rgba(12,16,28,.62); backdrop-filter:blur(3px);
+  display:flex; align-items:center; justify-content:center; padding:18px;
+  animation:aparece .18s ease;
+}
+.modal[hidden]{display:none}
+@keyframes aparece{from{opacity:0}}
+.modal-caixa{
+  width:100%; max-width:360px; background:#fff; border-radius:18px;
+  padding:26px 22px 22px; text-align:center;
+  box-shadow:0 24px 60px rgba(12,16,28,.34);
+  animation:sobe .24s cubic-bezier(.2,.8,.3,1);
+}
+@keyframes sobe{from{transform:translateY(14px) scale(.97); opacity:0}}
+.modal-ico{
+  width:56px; height:56px; border-radius:50%; margin:0 auto 14px;
+  background:#fff2f6; color:var(--rosa);
+  display:flex; align-items:center; justify-content:center;
+}
+.modal-ico svg{width:27px; height:27px}
+.modal-caixa h3{
+  font-family:var(--serif); font-weight:800; font-size:21px; line-height:1.2;
+  letter-spacing:-.5px; color:var(--tinta); margin:0 0 9px;
+}
+.modal-caixa p{
+  margin:0 0 18px; font-size:14px; line-height:1.6; color:var(--tinta-2); text-wrap:pretty;
+}
+.modal-caixa p strong{color:var(--tinta); font-weight:600}
+.modal-caixa .cta{margin-top:0}
+.modal-nao{
+  display:block; margin-top:13px; padding:6px;
+  font-size:13.5px; color:var(--cinza); text-decoration:underline; text-underline-offset:3px;
+}
+.modal-nao:hover{color:var(--tinta-2)}
+
+.rodape{
+  text-align:center; padding:26px 16px calc(20px + env(safe-area-inset-bottom));
+  font-size:11.5px; line-height:1.6; color:#9aa1ad;
+}
+
+@media (max-width:400px){
+  .ob-upsell__headline{font-size:24px; letter-spacing:-.6px}
+  .ob-upsell__intro{font-size:14.5px}
+  .ob-upsell__item p{font-size:13.5px}
+  .oferta .por b{font-size:36px}
+  .faixa-tempo b{font-size:13.5px}
+  .digito{min-width:27px; font-size:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  .cta,.doispontos{animation:none}
+  .barra-fixa{transition:none}
+}
+</style>
+<style data-offline="1">/* offline: ensure content is visible regardless of JS init state */
+html,body{opacity:1!important;visibility:visible!important}
+.page-loader,.site-loader,[class*='loading-screen'],[id*='loading-screen']{display:none!important}
+</style></head>
+<body>
+<!-- ═════════ contador ═════════ -->
+<div class="faixa-tempo" id="faixa-tempo">
+<div class="env">
+<b id="rotulo-tempo">OFERTA EXPIRA EM</b>
+<div class="relogio" id="relogio">
+<span class="digito" id="d1">0</span><span class="digito" id="d2">0</span>
+<span class="doispontos">:</span>
+<span class="digito" id="d3">4</span><span class="digito" id="d4">4</span>
+</div>
+</div>
+</div>
+<!-- ═════════ compra aprovada ═════════ -->
+<div class="aprovado">
+<div class="env">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6" viewbox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg>
+<span>Seu acesso aos projetos está garantido. Falta só isto:</span>
+</div>
+</div>
+<!-- ═════════ o upsell ═════════ -->
+<div class="ob-upsell">
+<span class="ob-upsell__tag">Pela metade do preço!</span>
+<h2 class="ob-upsell__headline">
+    TEM <em>CERTEZA</em> DISSO?<br/>
+<span class="linha-2">As vídeoaulas podem ser <em>vitais para iniciantes</em></span>
+</h2>
+<div class="ob-upsell__media">
+<img alt="Videoaulas de miçangas passo a passo" height="507" src="assets/fcf9979fac1548d6_video.webp" width="900"/>
+</div>
+<p class="ob-upsell__intro">
+    O gráfico mostra <em>onde</em> cada miçanga vai — mas não mostra <em>como</em> a
+    agulha entra. É aí que a maioria trava na primeira peça. Por isso estou refazendo
+    a oferta <strong>pela metade do preço</strong>, e só agora.
+  </p>
+<!-- preço + botão do gateway, logo depois da promessa e antes dos detalhes -->
+<div class="oferta" id="btn-sim">
+<div class="de">De <s>R$ 19,90</s></div>
+<div class="por"><span>Por apenas</span><b>R$ 9,90</b></div>
+<div class="parcela">pagamento único, no Pix ou no cartão</div>
+<!-- o Wiapy desenha aqui o botão de aceite e o link de recusa -->
+<div id="wiapy_upsell"><a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ">SIM, EU ACEITO ESSA OFERTA</a><a class="recusar" href="https://clubedacah.vercel.app/?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">Recusar está oferta</a></div>
+<!-- reserva: se o SDK não carregar, o link continua clicável em vez de sumir -->
+<noscript><a class="cta" href="https://go.perfectpay.com.br/PPU38CQG7CQ">SIM, EU ACEITO ESSA OFERTA</a></noscript>
+<div class="selo-seguro">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><rect height="11" rx="2.5" width="16" x="4" y="10"></rect><path d="M8 10V7a4 4 0 018 0v3"></path></svg>
+      Compra segura · acesso imediato
+    </div>
+</div>
+<h3 class="titulo-lista">O que você deixa de fora sem elas</h3>
+<div class="ob-upsell__list">
+<div class="ob-upsell__item">
+<span class="ob-upsell__icon"><svg aria-hidden="true" fill="none" viewbox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4"></path></svg></span>
+<p><strong>Montagem do zero, do primeiro nó ao brinco pronto</strong> — você vê exatamente onde a agulha entra em cada passo.</p>
+</div>
+<div class="ob-upsell__item">
+<span class="ob-upsell__icon"><svg aria-hidden="true" fill="none" viewbox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4"></path></svg></span>
+<p><strong>Passagem do fio sem embolar e sem quebrar miçanga</strong> — o detalhe que o gráfico sozinho não mostra.</p>
+</div>
+<div class="ob-upsell__item">
+<span class="ob-upsell__icon"><svg aria-hidden="true" fill="none" viewbox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4"></path></svg></span>
+<p><strong>Franjas e acabamento com cara de profissional</strong> — o que separa o brinco caseiro do brinco que vende.</p>
+</div>
+<div class="ob-upsell__item">
+<span class="ob-upsell__icon"><svg aria-hidden="true" fill="none" viewbox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4"></path></svg></span>
+<p><strong>Mais de 17 horas de gravação, sem corte</strong> — dá para pausar, voltar e refazer no seu ritmo.</p>
+</div>
+</div>
+</div>
+<!-- ═════════ prova ═════════ -->
+<div class="env">
+<h3 class="secao-titulo">Quem já está fazendo</h3>
+<div class="dep">
+<div class="dep-topo">
+<img alt="" height="42" loading="lazy" src="assets/106449b39d83646c_dep1.webp" width="42"/>
+<div>
+<div class="dep-nome">Verônica S. Cardoso</div>
+<div class="dep-estrelas">★★★★★</div>
+</div>
+</div>
+<div class="dep-texto">Fiquei encantada com o anúncio e comprei pra testar e foi o MELHOR investimento que fiz nesse ano! Os brincos ficam lindos com TUDOO 😍💗</div>
+</div>
+<div class="dep">
+<div class="dep-topo">
+<img alt="" height="42" loading="lazy" src="assets/53adaaca1d5ac3a5_dep2.webp" width="42"/>
+<div>
+<div class="dep-nome">Viviane L. Francisco</div>
+<div class="dep-estrelas">★★★★★</div>
+</div>
+</div>
+<div class="dep-texto">Recomendo muito. Minha filha comprou os gráficos pra mim fazer alguns brincos pra ela e o resultado fica maravilhoso 👍💗</div>
+</div>
+<div class="dep">
+<div class="dep-topo">
+<img alt="" height="42" loading="lazy" src="assets/51c5f737d03cc0aa_dep3.webp" width="42"/>
+<div>
+<div class="dep-nome">Bianca V. Müller</div>
+<div class="dep-estrelas">★★★★★</div>
+</div>
+</div>
+<div class="dep-texto">Aprovadíssimo! Comprei os projetos pra fazer pra mim, mas todo mundo da prefeitura aonde trabalho já tá encomendando os brincos comigo 🥰👏</div>
+</div>
+<div class="garantia">
+<div class="garantia-topo">
+<img alt="Garantia de 7 dias" height="72" loading="lazy" src="assets/da5cf79193a41cc1_garantia.webp" width="72"/>
+<div class="garantia-txt">
+<b>Garantia de 7 dias</b>
+<p>Teste tudo por 7 dias. Se não for pra você, devolvemos <strong>100% do seu dinheiro</strong>, sem perguntas.</p>
+</div>
+</div>
+<div class="garantia-pe">O risco é todo nosso. Você não tem nada a perder.</div>
+</div>
+</div>
+<p class="rodape">
+  Última chamada: esta oferta não volta a aparecer.<br/>
+  Miçangas da Juh · todos os direitos reservados
+</p>
+<!-- ═════════ confirmação da recusa ═════════ -->
+<div class="modal" hidden="" id="modal-certeza">
+<div aria-labelledby="modal-tit" aria-modal="true" class="modal-caixa" role="dialog">
+<div class="modal-ico">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M12 9v4.6"></path><circle cx="12" cy="17.3" fill="currentColor" r=".9" stroke="none"></circle><path d="M10.3 3.9L2.5 17.6A2 2 0 004.2 20.6h15.6a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"></path></svg>
+</div>
+<h3 id="modal-tit">Tem certeza mesmo?</h3>
+<p>
+      Esta é a <strong>última vez</strong> que as videoaulas aparecem por R$ 9,90.
+      Depois daqui elas voltam ao preço cheio — e a maioria das alunas só percebe
+      que precisava delas ao travar na primeira peça.
+    </p>
+<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ">Sim, eu vou precisar</a>
+<a class="modal-nao" href="https://clubedacah.vercel.app/?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">Não, eu assumo o risco</a>
+</div>
+</div>
+<!-- ═════════ barra fixa ═════════ -->
+<div class="barra-fixa" id="barra-fixa">
+<div class="env">
+<div class="val"><small>R$ 19,90</small><b>R$ 9,90</b></div>
+<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ">SIM, EU ACEITO</a>
+</div>
+</div>
+<!-- ══════════ botão do gateway ══════════
+     A recusa NÃO volta para o login da Wiapy: vai para o downsell, que é a próxima
+     oferta do funil. Enquanto /dows não existir, quem recusar cai num 404 — subir
+     as duas juntas, ou apontar a recusa para a área de membros. -->
+<script>
+if (typeof initWiapyUpsell === 'function') {
+  initWiapyUpsell({
+    linkUrl: "https://go.perfectpay.com.br/PPU38CQG7CQ",
+    linkText: "SIM, EU ACEITO ESSA OFERTA",
+    styles: {
+      backgroundColor: "#00d769",
+      hoverBackgroundColor: "#00b85a",
+      fontSize: "17px",
+      borderRadius: "10px"
+    },
+    refusalLinkUrl: "https://clubedacah.vercel.app/",
+    refusalLinkText: "Recusar está oferta",
+    refusalLinkColor: "#000000"
+  });
+} else {
+  // o SDK não chegou: desenha o mesmo par de links à mão, para a página nunca
+  // ficar sem caminho de saída
+  document.getElementById('wiapy_upsell').innerHTML =
+    '<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ">SIM, EU ACEITO ESSA OFERTA</a>' +
+    '<a class="recusar" href="https://clubedacah.vercel.app/">Recusar está oferta</a>';
+}
+</script>
+<!-- ══════════ a recusa passa pelo popup ══════════
+     O link de recusa é desenhado pelo SDK do Wiapy, então ele não existe no
+     HTML: aparece dentro de #wiapy_upsell depois que o script roda. Por isso a
+     captura é por delegação no documento — pega o clique mesmo que o elemento
+     tenha nascido bem depois desta linha. -->
+<script>
+(function () {
+  var DESTINO = 'https://clubedacah.vercel.app/';
+  var modal = document.getElementById('modal-certeza');
+
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || modal.contains(a)) return;              // dentro do popup, deixa passar
+    if ((a.getAttribute('href') || '').indexOf(DESTINO) !== 0) return;
+    e.preventDefault();
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }, true);
+
+  // clicar no fundo escuro fecha e devolve a pessoa para a oferta
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) { modal.hidden = true; document.body.style.overflow = ''; }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.hidden) { modal.hidden = true; document.body.style.overflow = ''; }
+  });
+})();
+</script>
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   CONTADOR — 7 minutos, gravados por sessão.
+   Guardar o instante final no sessionStorage faz o tempo continuar de onde
+   parou se a pessoa recarregar, em vez de reiniciar em 7:00 a cada F5 —
+   contador que renasce cheio é o que denuncia a contagem falsa.
+   ══════════════════════════════════════════════════════════════════ */
+(function () {
+  var SEG = 57;
+  var fim;
+  try {
+    fim = parseInt(sessionStorage.getItem('dows-fim') || '0', 10);
+    if (!fim || fim < Date.now()) {
+      fim = Date.now() + SEG * 1000;
+      sessionStorage.setItem('dows-fim', String(fim));
+    }
+  } catch (e) { fim = Date.now() + SEG * 1000; }
+
+  var d = ['d1', 'd2', 'd3', 'd4'].map(function (x) { return document.getElementById(x); });
+
+  function tique() {
+    var s = Math.max(0, Math.round((fim - Date.now()) / 1000));
+    var m = Math.floor(s / 60), r = s % 60;
+    var t = String(m).padStart(2, '0') + String(r).padStart(2, '0');
+    for (var i = 0; i < 4; i++) if (d[i].textContent !== t[i]) d[i].textContent = t[i];
+    if (s <= 0) {
+      clearInterval(id);
+      document.getElementById('faixa-tempo').classList.add('acabou');
+      document.getElementById('rotulo-tempo').textContent = 'OFERTA ENCERRADA';
+    }
+  }
+  tique();
+  var id = setInterval(tique, 1000);
+})();
+
+/* a barra fixa entra quando o botão principal sai da vista */
+(function () {
+  var alvo = document.getElementById('btn-sim');
+  var barra = document.getElementById('barra-fixa');
+  if (!alvo || !barra || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function (e) {
+    barra.classList.toggle('on', !e[0].isIntersecting);
+  }, { threshold: 0 }).observe(alvo);
+})();
+
+/* o botão de aceite e o de recusa são desenhados pelo Wiapy (ou pela reserva
+   acima), então não há handler próprio aqui */
+</script>
+<script data-offline-fix="1">(function(){
+var IS_CSR = false;
+var resolveLocal = window.__resolveLocal || function(){return null;};
+var rewriteSrcset = window.__rewriteSrcset || function(s){return s;};
+function fixImg(el){
+  if (!el || el.tagName !== 'IMG') return;
+  var src = el.getAttribute('src');
+  var loc = resolveLocal(src);
+  if (loc && src !== loc) el.setAttribute('src', loc);
+  var ss = el.getAttribute('srcset');
+  if (ss) {
+    var nss = rewriteSrcset(ss);
+    if (nss !== ss) el.setAttribute('srcset', nss);
+  }
+}
+function fixAll(){ document.querySelectorAll('img').forEach(fixImg); }
+function hasSlideOffset(t){
+  // True if a transform indicates a 'parked off-screen' starting
+  // state: translation in px (>= 30) or % (>= 5), or a matrix
+  // with non-zero translation. Returns false for crossfade-only
+  // companions like scale(0.9) or pure centering translateX(-50%).
+  if (!t || t === 'none') return false;
+  // matrix(a,b,c,d,tx,ty) — parse tx/ty; matrix3d & friends → assume slide.
+  var matMatch = t.match(/matrix\(([^)]+)\)/);
+  if (matMatch) {
+    var parts = matMatch[1].split(',').map(function(x){return parseFloat(x.trim());});
+    if (parts.length === 6) {
+      if (Math.abs(parts[4]) >= 30 || Math.abs(parts[5]) >= 30) return true;
+    } else { return true; }
+  }
+  if (/matrix3d/i.test(t)) return true;
+  var px = t.match(/(-?\d+\.?\d*)px/g) || [];
+  for (var i = 0; i < px.length; i++) {
+    if (Math.abs(parseFloat(px[i])) >= 30) return true;
+  }
+  var pct = t.match(/(-?\d+\.?\d*)%/g) || [];
+  for (var j = 0; j < pct.length; j++) {
+    if (Math.abs(parseFloat(pct[j])) >= 5) return true;
+  }
+  return false;
+}
+function isHiddenStart(s){
+  // True if the element's inline style is parked at a 'before'
+  // animation state. opacity:0 alone is ambiguous (could be a
+  // crossfade companion); pair it with a slide transform OR an
+  // explicit visibility:hidden (GSAP/SplitType signature) to be
+  // confident it's a scroll-reveal waiting to fire.
+  if (s.opacity !== '0' && s.visibility !== 'hidden') return false;
+  if (s.visibility === 'hidden') return true;
+  return hasSlideOffset(s.transform) || hasSlideOffset(s.translate);
+}
+function revealEl(el){
+  var s = el.style;
+  s.opacity = '1';
+  if (s.visibility === 'hidden') s.visibility = 'visible';
+  if (s.transform) s.transform = 'none';
+  if (s.translate) s.translate = 'none';
+  if (s.rotate)    s.rotate = 'none';
+  if (s.scale)     s.scale = 'none';
+  if (s.pointerEvents === 'none') s.pointerEvents = '';
+}
+function snapReveal(){
+  // Safety net: any 'before-state' element still hidden gets
+  // forced visible. Used as a deadline pass for non-CSR mode
+  // (after GSAP/etc had a chance to play) and as a final guard.
+  // Skip pinned-chain elements — same reason as findScrollAnchor.
+  var n = 0;
+  document.querySelectorAll('[style]').forEach(function(el){
+    if (!isHiddenStart(el.style)) return;
+    if (isInsideFixed(el)) return;
+    revealEl(el); n++;
+  });
+  if (window.console && n) console.log('[offline-fix] snap-revealed', n);
+}
+function isInsideFixed(el){
+  var p = el;
+  while (p && p !== document.documentElement) {
+    if (getComputedStyle(p).position === 'fixed') return true;
+    p = p.parentElement;
+  }
+  return false;
+}
+function findScrollAnchor(el){
+  // Pinned-narrative sections (one position:fixed ancestor wrapping
+  // many sequenced headings the live JS reveals one-by-one across
+  // scroll progress) can't be orchestrated offline — revealing all
+  // of them at once produces an overlapping mess. Skip them: leave
+  // the parked state intact, matching the live site at scroll=0.
+  // For sticky chains, observe the sticky container itself (fires
+  // when the user has scrolled past its stuck threshold).
+  if (isInsideFixed(el)) return null;
+  var p = el;
+  while (p && p !== document.documentElement) {
+    if (getComputedStyle(p).position === 'sticky') return p;
+    p = p.parentElement;
+  }
+  return el;
+}
+function progressiveReveal(){
+  // CSR mode: scripts stripped → no GSAP/IO is going to fire.
+  // Mimic a scroll-driven reveal: each parked element gets a
+  // CSS transition + IntersectionObserver. As it enters viewport
+  // we transition to the 'after' state, with a small stagger by
+  // document order so SplitType chars still feel letter-by-letter.
+  var targets = [];
+  document.querySelectorAll('[style]').forEach(function(el){
+    if (isHiddenStart(el.style)) targets.push(el);
+  });
+  if (!targets.length) return;
+  var EASE = 'cubic-bezier(.16,1,.3,1)';
+  targets.forEach(function(el){
+    el.style.transition =
+      'opacity .6s ' + EASE + ', transform .6s ' + EASE + ', ' +
+      'translate .6s ' + EASE + ', scale .6s ' + EASE + ', ' +
+      'visibility 0s linear';
+  });
+  if (typeof IntersectionObserver === 'undefined') {
+    targets.forEach(revealEl);
+    return;
+  }
+  // Group targets by their scroll anchor. Anchors in sticky
+  // sections share one observation point — when that anchor
+  // intersects, we reveal all its parked descendants.
+  // Targets with null anchor (inside position:fixed) are skipped.
+  var groups = new Map();
+  targets.forEach(function(el){
+    var anchor = findScrollAnchor(el);
+    if (!anchor) return;
+    if (!groups.has(anchor)) groups.set(anchor, []);
+    groups.get(anchor).push(el);
+  });
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (!entry.isIntersecting) return;
+      var children = groups.get(entry.target) || [entry.target];
+      children.sort(function(a, b){
+        var pos = a.compareDocumentPosition(b);
+        return (pos & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
+      });
+      children.forEach(function(child, i){
+        var delay = Math.min(i * 18, 700);
+        setTimeout(function(){ revealEl(child); }, delay);
+      });
+      io.unobserve(entry.target);
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
+  groups.forEach(function(_, anchor){ io.observe(anchor); });
+  // Deadline guard: anything that never intersects still gets revealed.
+  setTimeout(snapReveal, 8000);
+}
+function initUnicornStudio(){
+  // Captured page already has the loaded UMD script + the inline
+  // loader that says `if(!window.UnicornStudio)…`. The loader bails
+  // because UnicornStudio is already defined, so init() never runs.
+  if (window.UnicornStudio && typeof window.UnicornStudio.init === 'function'
+      && !window.UnicornStudio.isInitialized) {
+    try { window.UnicornStudio.init(); window.UnicornStudio.isInitialized = true; }
+    catch(e){ if(window.console) console.warn('[offline-fix] UnicornStudio init failed:', e); }
+  }
+}
+// Initial img sweep + observer for hydration-time updates
+fixAll();
+var obs = new MutationObserver(function(muts){
+  for (var i = 0; i < muts.length; i++) {
+    var m = muts[i];
+    if (m.type === 'attributes' && m.target.tagName === 'IMG') fixImg(m.target);
+    for (var j = 0; j < m.addedNodes.length; j++) {
+      var n = m.addedNodes[j];
+      if (n && n.nodeType === 1) {
+        if (n.tagName === 'IMG') fixImg(n);
+        if (n.querySelectorAll) n.querySelectorAll('img').forEach(fixImg);
+      }
+    }
+  }
+});
+obs.observe(document, {childList:true, subtree:true,
+  attributes:true, attributeFilter:['src','srcset']});
+setTimeout(fixAll, 1000);
+setTimeout(fixAll, 3000);
+var go = function(){
+  // CSR: scripts stripped, so 'before-state' elements stay parked
+  // forever unless we do something. Use IntersectionObserver to
+  // reveal them progressively as the user scrolls — preserves the
+  // scroll-triggered animation feel for SplitType chars, etc.
+  // Non-CSR: GSAP/Framer may still play; let them, then catch any
+  // leftovers with a snap pass at 5 s.
+  if (IS_CSR) progressiveReveal();
+  else setTimeout(snapReveal, 5000);
+  initUnicornStudio();
+  setTimeout(initUnicornStudio, 500);
+  setTimeout(initUnicornStudio, 2000);
+};
+if (document.readyState === 'complete') go();
+else window.addEventListener('load', go);
+})();</script></body></html>
