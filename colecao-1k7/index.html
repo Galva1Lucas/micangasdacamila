@@ -401,7 +401,7 @@ html,body{opacity:1!important;visibility:visible!important}
 <div class="por"><span>Por apenas</span><b>R$ 19,90</b></div>
 <div class="parcela">à vista no Pix ou em até 3x no cartão</div>
 <!-- o Wiapy desenha aqui o botão de aceite e o link de recusa -->
-<div id="wiapy_upsell"><a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CP">SIM, EU QUERO A OFERTA</a><a class="recusar" href="https://micangasdacamila.vercel.app/conteudo?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">Eu não quero a oferta</a></div>
+<div id="wiapy_upsell"><a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CP">SIM, EU QUERO A OFERTA</a><a class="recusar" href="https://micangasdacamila.vercel.app/conteudo-2k?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">Eu não quero a oferta</a></div>
 <!-- reserva: se o SDK não carregar, o link continua clicável em vez de sumir -->
 <noscript><a class="cta" href="https://go.perfectpay.com.br/PPU38CQG7CP">SIM, EU QUERO A OFERTA</a></noscript>
 <div class="selo-seguro">
@@ -499,7 +499,7 @@ if (typeof initWiapyUpsell === 'function') {
       fontSize: "17px",
       borderRadius: "10px"
     },
-    refusalLinkUrl: "https://micangasdacamila.vercel.app/conteudo",
+    refusalLinkUrl: "https://micangasdacamila.vercel.app/conteudo-2k",
     refusalLinkText: "Eu não quero a oferta",
     refusalLinkColor: "#000000"
   });
@@ -508,7 +508,7 @@ if (typeof initWiapyUpsell === 'function') {
   // ficar sem caminho de saída
   document.getElementById('wiapy_upsell').innerHTML =
     '<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CP">SIM, EU QUERO A OFERTA</a>' +
-    '<a class="recusar" href="https://micangasdacamila.vercel.app/conteudo">Eu não quero a oferta</a>';
+    '<a class="recusar" href="https://micangasdacamila.vercel.app/conteudo-2k">Eu não quero a oferta</a>';
 }
 </script>
 <script>
