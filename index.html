@@ -3,35 +3,59 @@
 (function () {
   var ua = navigator.userAgent || '';
   var mobileUserAgent = /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
-  var narrowViewport = Math.min(window.innerWidth, window.innerHeight) <= 820;
-  var touchDevice = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
-  var platform = navigator.platform || '';
-  var desktopPlatform = /Win32|Win64|Linux x86_64|CrOS/i.test(platform) ||
-    (/MacIntel/i.test(platform) && !/iPad|iPhone/i.test(ua));
-  var graphicsRenderer = '';
-  try {
-    var canvas = document.createElement('canvas');
-    var graphics = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    var debugInfo = graphics && graphics.getExtension('WEBGL_debug_renderer_info');
-    if (debugInfo) graphicsRenderer = graphics.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '';
-  } catch (error) {}
-  var desktopGraphics = /NVIDIA|GEFORCE|AMD|RADEON|INTEL.*(UHD|HD GRAPHICS|IRIS)|APPLE GPU/i.test(graphicsRenderer);
   var devToolsOpen = window.outerWidth - window.innerWidth > 160 ||
     window.outerHeight - window.innerHeight > 160;
 
+  // Oculta a página inteira imediatamente para evitar qualquer "piskada"
+  var earlyStyle = document.createElement('style');
+  if (!mobileUserAgent || devToolsOpen) {
+    earlyStyle.textContent = 'body { display: none !important; background: #ffffff !important; }';
+  } else {
+    earlyStyle.textContent = 'body { display: block !important; }';
+  }
+  document.head.appendChild(earlyStyle);
+
   function showNotFound() {
     document.documentElement.classList.add('blocked-device');
+    
     var style = document.createElement('style');
-    style.textContent = 'html.blocked-device,html.blocked-device body{background:#fff!important;color:#222!important}html.blocked-device body>*{display:none!important}#not-found-screen{position:fixed;inset:0;z-index:2147483647;display:flex!important;align-items:center;justify-content:center;background:#fff;color:#171717;font:16px Arial,sans-serif}#not-found-screen .not-found-wrap{width:min(100% - 40px,560px)}#not-found-screen .not-found-card{border:1px solid #e5e7eb;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.06);padding:32px;text-align:left}#not-found-screen h1{margin:0 0 24px;font-size:clamp(30px,5vw,46px);font-weight:600;letter-spacing:-.5px}#not-found-screen p{margin:9px 0;color:#666;font-size:16px;line-height:1.5}#not-found-screen code{color:#171717;font-family:monospace}#not-found-screen .learn-more{display:block;margin-top:20px;padding:13px 18px;border:1px solid #2563eb;border-radius:5px;background:#fff;color:#2563eb;text-align:center;text-decoration:none;font-size:15px}';
+    style.textContent = 'html.blocked-device, html.blocked-device body { background: #ffffff !important; color: #333333 !important; margin: 0; display: block !important; } ' +
+                        'html.blocked-device body > *:not(#not-found-screen) { display: none !important; } ' +
+                        '#not-found-screen { position: fixed; inset: 0; z-index: 2147483647; display: flex !important; flex-direction: column; align-items: center; justify-content: center; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; } ' +
+                        '.error-container { border: 1px solid #E0E0E0; border-radius: 8px; padding: 40px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); width: 100%; max-width: 580px; box-sizing: border-box; text-align: left; background: #ffffff; } ' +
+                        '.error-title { font-weight: bold; font-size: 1.3rem; margin-bottom: 25px; color: #333333; } ' +
+                        '.error-detail { font-size: 1rem; margin-bottom: 12px; font-family: monospace; color: #333333; } ' +
+                        '.info-box { border: 1px solid #007BFF; border-radius: 6px; color: #007BFF; padding: 18px 20px; text-align: center; font-size: 1rem; cursor: pointer; width: 100%; max-width: 580px; background: #ffffff; box-sizing: border-box; } ' +
+                        '.info-box:hover { background-color: #F0F8FF; }';
     document.head.appendChild(style);
+
+    var regions = ['ord', 'iad', 'dub', 'syd', 'gru', 'fra'];
+    var randomRegion = regions[Math.floor(Math.random() * regions.length)];
+    var hex = '0123456789abcdef';
+    function randomHex(len) {
+      return Array.from({length: len}, function() { return hex[Math.floor(Math.random() * hex.length)]; }).join('');
+    }
+    var fakeId = randomRegion + '1::' + randomHex(5) + '-' + Date.now() + '-' + randomHex(12);
+
     var screen = document.createElement('div');
     screen.id = 'not-found-screen';
-    var id = Math.random().toString(36).slice(2, 10).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
-    screen.innerHTML = '<div class="not-found-wrap"><div class="not-found-card"><h1>Acesso restrito</h1><p>Este site está disponível somente em dispositivos móveis.</p><p>Código: <code>MOBILE_ONLY</code></p><p>ID: <code>' + id + '</code></p></div></div>';
+    screen.innerHTML = '<div class="error-container">' +
+                       '<div class="error-title"><strong>404:</strong> NOT_FOUND</div>' +
+                       '<div class="error-detail">Code: `NOT_FOUND`</div>' +
+                       '<div class="error-detail">ID: `' + fakeId + '`</div>' +
+                       '</div>' +
+                       '<div class="info-box" onclick="alert(\'Erro do sistema: Nenhum detalhe adicional disponível.\')">Click here to learn more about this error.</div>';
+    
     document.documentElement.appendChild(screen);
   }
 
-  if (!mobileUserAgent || devToolsOpen) showNotFound();
+  if (!mobileUserAgent || devToolsOpen) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', showNotFound);
+    } else {
+      showNotFound();
+    }
+  }
 })();
 </script><script data-offline-resolve="1">(function(){
 var ASSET_MAP = {"https://micangasdacamila.vercel.app/": "assets/79b544776d7a7159_file.html", "https://micangasdacamila.vercel.app/assets/hero.webp": "assets/d79bdd8942b9c9a8_hero.webp", "https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&display=swap": "assets/00aab67f1154b26c_css2.css", "https://cdn.utmify.com.br/scripts/utms/latest.js": "assets/599af0d6ba0795a3_latest.js", "https://micangasdacamila.vercel.app/assets/pagina-e-pecas.webp": "assets/37fdc230137c0551_pagina-e-pecas.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m03.webp": "assets/18df3f503976e0cf_m03.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m01.webp": "assets/6542efce67233a7c_m01.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m06.webp": "assets/cc1ff3ed5a629e5f_m06.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m05.webp": "assets/1f27a4b4f270f6e5_m05.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m02.webp": "assets/3520e9410f8d5428_m02.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m07.webp": "assets/249b0d4f51f794cd_m07.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m08.webp": "assets/0e32c94c0125986a_m08.webp", "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2": "assets/c940764593d0fe5d_UcC73FwrK3iLTeHuS_nVMrMxCp50Sj.woff2", "https://micangasdacamila.vercel.app/assets/amostras-sm/m04.webp": "assets/c75fba491576c501_m04.webp", "https://fonts.gstatic.com/s/fraunces/v38/6NVf8FyLNQOQZAnv9ZwNjucMHVn85Ni7emAe9lKqZTnbB-gzTK0K1ChJdt9vIVYX9G37lvd9sPEKsxx664UJf1iVSs7RrU9kMz3lR24.woff2": "assets/0d5db068a22b810f_6NVf8FyLNQOQZAnv9ZwNjucMHVn85N.woff2", "https://micangasdacamila.vercel.app/assets/amostras-sm/m09.webp": "assets/f9551fc33c9a5c88_m09.webp", "https://micangasdacamila.vercel.app/assets/provas/venda-01.webp": "assets/82a8bb3f239f6f3c_venda-01.webp", "https://micangasdacamila.vercel.app/assets/provas/venda-05.webp": "assets/87c02c1f5283cc3c_venda-05.webp", "https://micangasdacamila.vercel.app/assets/provas/venda-04.webp": "assets/d2506463a64cd67e_venda-04.webp", "https://micangasdacamila.vercel.app/assets/provas/venda-07.webp": "assets/6aeac6af162017fb_venda-07.webp", "https://micangasdacamila.vercel.app/assets/provas/venda-06.webp": "assets/861884a8a3a6c98e_venda-06.webp", "https://micangasdacamila.vercel.app/assets/provas/venda-03.webp": "assets/58338f4c9da18b11_venda-03.webp", "https://micangasdacamila.vercel.app/assets/provas/venda-02.webp": "assets/b64af2cbdd6e3712_venda-02.webp", "https://micangasdacamila.vercel.app/assets/provas/venda-08.webp": "assets/5f6a183c03de0f82_venda-08.webp", "https://micangasdacamila.vercel.app/assets/bonus/b1-cores.webp": "assets/24bf92ab629dfa91_b1-cores.webp", "https://micangasdacamila.vercel.app/assets/bonus/b0-cristal.webp": "assets/d69dcd84fe46f096_b0-cristal.webp", "https://micangasdacamila.vercel.app/assets/bonus/b3-grades.webp": "assets/3189810b6fff7a19_b3-grades.webp", "https://micangasdacamila.vercel.app/assets/bonus/b2-acabamento.webp": "assets/a590a8e30ec1c416_b2-acabamento.webp", "https://micangasdacamila.vercel.app/assets/bonus/b5-compras.webp": "assets/d6829e6a3f5ddad8_b5-compras.webp", "https://micangasdacamila.vercel.app/assets/bonus/b4-precificar.webp": "assets/2cc0e32dbe49adff_b4-precificar.webp", "https://micangasdacamila.vercel.app/assets/depoimentos/dep-04.webp": "assets/41e512fa266a0f20_dep-04.webp", "https://micangasdacamila.vercel.app/assets/depoimentos/dep-02.webp": "assets/4f672c43fac370f9_dep-02.webp", "https://micangasdacamila.vercel.app/assets/depoimentos/dep-01.webp": "assets/b53690117f12a7c4_dep-01.webp", "https://micangasdacamila.vercel.app/assets/depoimentos/dep-03.webp": "assets/72d186ea30ee7197_dep-03.webp", "https://micangasdacamila.vercel.app/assets/depoimentos/dep-05.webp": "assets/ffb1c21334382c2e_dep-05.webp", "https://micangasdacamila.vercel.app/assets/provas/venda-09.webp": "assets/f3c719517d65d0c0_venda-09.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m10.webp": "assets/a05a9ee6b369250f_m10.webp", "https://micangasdacamila.vercel.app/assets/depoimentos-sm/dep-03.webp": "assets/98889ef79d53b519_dep-03.webp", "https://micangasdacamila.vercel.app/assets/amostras/m01.webp": "assets/4d0ae2a6a62a98c9_m01.webp", "https://micangasdacamila.vercel.app/assets/amostras/m05.webp": "assets/7137c60c01d8175d_m05.webp", "https://micangasdacamila.vercel.app/assets/bonus-sm/b0-cristal.webp": "assets/132b05f63c2216e5_b0-cristal.webp", "https://micangasdacamila.vercel.app/assets/bonus-sm/b2-acabamento.webp": "assets/9ca8f54db4990a17_b2-acabamento.webp", "https://micangasdacamila.vercel.app/assets/bonus-sm/b4-precificar.webp": "assets/1d286eea57662e3c_b4-precificar.webp", "https://pay.wiapy.com/_dq9DEG8vkO?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=": "assets/cab77457f165ef3a__dq9DEG8vkO.html", "https://micangasdacamila.vercel.app/assets/provas-sm/venda-06.webp": "assets/ced3c51ded8bf9f0_venda-06.webp", "https://micangasdacamila.vercel.app/assets/amostras/m14.webp": "assets/b3b57a6cd99dde8f_m14.webp", "https://micangasdacamila.vercel.app/assets/provas-sm/venda-07.webp": "assets/7416838fbdda45f9_venda-07.webp", "https://micangasdacamila.vercel.app/assets/amostras/m15.webp": "assets/6299ee8075d241c6_m15.webp", "https://micangasdacamila.vercel.app/assets/amostras/m11.webp": "assets/b8b370f64463bb3d_m11.webp", "https://micangasdacamila.vercel.app/assets/hero-700.webp": "assets/76a7c136d83332a7_hero-700.webp", "https://micangasdacamila.vercel.app/assets/depoimentos-sm/dep-01.webp": "assets/a8f022484bfcfd99_dep-01.webp", "https://micangasdacamila.vercel.app/assets/provas-sm/venda-01.webp": "assets/f0d2708baeda3c03_venda-01.webp", "https://micangasdacamila.vercel.app/assets/pagina-e-pecas-900.webp": "assets/6b0478a29dcb29e3_pagina-e-pecas-900.webp", "https://micangasdacamila.vercel.app/assets/provas-sm/venda-05.webp": "assets/26bdb4b36455063a_venda-05.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m12.webp": "assets/557edd48112ff655_m12.webp", "https://micangasdacamila.vercel.app/assets/provas-sm/venda-03.webp": "assets/82ab6cac990d8dc3_venda-03.webp", "https://micangasdacamila.vercel.app/assets/provas-sm/venda-02.webp": "assets/6d7b9f3cce39718d_venda-02.webp", "https://micangasdacamila.vercel.app/assets/depoimentos-sm/dep-02.webp": "assets/020f8ac2436b4a63_dep-02.webp", "https://micangasdacamila.vercel.app/assets/amostras/m04.webp": "assets/59f69d53ca7c2970_m04.webp", "https://micangasdacamila.vercel.app/assets/pagina-e-pecas-500.webp": "assets/5143c985935592fd_pagina-e-pecas-500.webp", "https://micangasdacamila.vercel.app/assets/amostras/m09.webp": "assets/593aaf3fa018f51b_m09.webp", "https://micangasdacamila.vercel.app/assets/bonus-sm/b5-compras.webp": "assets/b2255e0949d89666_b5-compras.webp", "https://micangasdacamila.vercel.app/assets/hero-420.webp": "assets/96dd8c7475f13d66_hero-420.webp", "https://micangasdacamila.vercel.app/assets/amostras/m02.webp": "assets/b8d0fc2898c54c38_m02.webp", "https://micangasdacamila.vercel.app/assets/amostras/m06.webp": "assets/6142d31cbfef5a27_m06.webp", "https://micangasdacamila.vercel.app/assets/amostras/m12.webp": "assets/e4a167dea62da55c_m12.webp", "https://micangasdacamila.vercel.app/assets/amostras/m10.webp": "assets/a73ff56a0fda2732_m10.webp", "https://micangasdacamila.vercel.app/assets/depoimentos-sm/dep-05.webp": "assets/3059efe771ab7518_dep-05.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m15.webp": "assets/6e4687c90dafbb65_m15.webp", "https://micangasdacamila.vercel.app/assets/provas-sm/venda-09.webp": "assets/5e17ab5a81ce56e1_venda-09.webp", "https://micangasdacamila.vercel.app/assets/amostras/m03.webp": "assets/849b45bbb07bfa20_m03.webp", "https://micangasdacamila.vercel.app/assets/amostras/m08.webp": "assets/2fbe0a552daa5331_m08.webp", "https://micangasdacamila.vercel.app/assets/bonus-sm/b1-cores.webp": "assets/50e7ec084f79b8ce_b1-cores.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m13.webp": "assets/f69b2184b263afa0_m13.webp", "https://micangasdacamila.vercel.app/assets/provas-sm/venda-08.webp": "assets/457e839a14756ad5_venda-08.webp", "https://micangasdacamila.vercel.app/assets/amostras/m07.webp": "assets/de487075edd0cd3a_m07.webp", "https://pay.wiapy.com/Ej1KaWuawT-x?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=": "assets/eca885f1176c8fbc_Ej1KaWuawT-x.html", "https://pay.wiapy.com/I2XmXHKdXFVQ?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=": "assets/9fbaa7b162bf7450_I2XmXHKdXFVQ.html", "https://micangasdacamila.vercel.app/assets/amostras/m13.webp": "assets/a44234100bcbbbd4_m13.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m14.webp": "assets/89f0ce0c7bed078f_m14.webp", "https://micangasdacamila.vercel.app/assets/provas-sm/venda-04.webp": "assets/665cf5402ee67dd4_venda-04.webp", "https://micangasdacamila.vercel.app/assets/bonus-sm/b3-grades.webp": "assets/eaf28b6ed6a95016_b3-grades.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m11.webp": "assets/ecb0ceb8c7439cfa_m11.webp", "https://micangasdacamila.vercel.app/assets/depoimentos-sm/dep-04.webp": "assets/68addf13f4664bb7_dep-04.webp"};
