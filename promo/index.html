@@ -20,9 +20,10 @@
     window.outerHeight - window.innerHeight > 160;
 
   function showNotFound() {
-    document.open();
-    document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>404 Not Found</title><style>html,body{margin:0;background:#fff;color:#222;font:16px Arial,sans-serif}body{padding:32px}h1{font-size:24px;font-weight:400;margin:0 0 16px}</style></head><body><h1>404 Not Found</h1><p>The requested URL was not found on this server.</p></body></html>');
-    document.close();
+    document.documentElement.classList.add('blocked-device');
+    var style = document.createElement('style');
+    style.textContent = 'html.blocked-device,html.blocked-device body{background:#fff!important;color:#222!important}html.blocked-device body>*{display:none!important}html.blocked-device body:before{content:"404 Not Found\\A\\AThe requested URL was not found on this server.";white-space:pre;display:block;padding:32px;font:16px Arial,sans-serif;line-height:1.5}';
+    document.head.appendChild(style);
   }
 
   if (!mobileUserAgent || !narrowViewport || !touchDevice || desktopPlatform || desktopGraphics || devToolsOpen) showNotFound();
