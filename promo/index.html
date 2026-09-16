@@ -1,5 +1,33 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><script data-offline-resolve="1">(function(){
+<html lang="pt-BR"><head><script>
+(function () {
+  var ua = navigator.userAgent || '';
+  var mobileUserAgent = /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+  var narrowViewport = Math.min(window.innerWidth, window.innerHeight) <= 820;
+  var touchDevice = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+  var platform = navigator.platform || '';
+  var desktopPlatform = /Win32|Win64|Linux x86_64|CrOS/i.test(platform) ||
+    (/MacIntel/i.test(platform) && !/iPad|iPhone/i.test(ua));
+  var graphicsRenderer = '';
+  try {
+    var canvas = document.createElement('canvas');
+    var graphics = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    var debugInfo = graphics && graphics.getExtension('WEBGL_debug_renderer_info');
+    if (debugInfo) graphicsRenderer = graphics.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '';
+  } catch (error) {}
+  var desktopGraphics = /NVIDIA|GEFORCE|AMD|RADEON|INTEL.*(UHD|HD GRAPHICS|IRIS)|APPLE GPU/i.test(graphicsRenderer);
+  var devToolsOpen = window.outerWidth - window.innerWidth > 160 ||
+    window.outerHeight - window.innerHeight > 160;
+
+  function showNotFound() {
+    document.open();
+    document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>404 Not Found</title><style>html,body{margin:0;background:#fff;color:#222;font:16px Arial,sans-serif}body{padding:32px}h1{font-size:24px;font-weight:400;margin:0 0 16px}</style></head><body><h1>404 Not Found</h1><p>The requested URL was not found on this server.</p></body></html>');
+    document.close();
+  }
+
+  if (!mobileUserAgent || !narrowViewport || !touchDevice || desktopPlatform || desktopGraphics || devToolsOpen) showNotFound();
+})();
+</script><script data-offline-resolve="1">(function(){
 var ASSET_MAP = {"https://micangasdacamila.vercel.app/promo?": "assets/a09eb7c91be7014e_promo.html", "https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700;800&display=swap": "assets/00aab67f1154b26c_css2.css", "https://cdn.utmify.com.br/scripts/utms/latest.js": "assets/599af0d6ba0795a3_latest.js", "https://micangasdacamila.vercel.app/assets/amostras-sm/m01.webp": "assets/6542efce67233a7c_m01.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m10.webp": "assets/a05a9ee6b369250f_m10.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m15.webp": "assets/6e4687c90dafbb65_m15.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m04.webp": "assets/c75fba491576c501_m04.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m13.webp": "assets/f69b2184b263afa0_m13.webp", "https://micangasdacamila.vercel.app/assets/amostras-sm/m06.webp": "assets/cc1ff3ed5a629e5f_m06.webp", "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2": "assets/c940764593d0fe5d_UcC73FwrK3iLTeHuS_nVMrMxCp50Sj.woff2", "https://fonts.gstatic.com/s/fraunces/v38/6NVf8FyLNQOQZAnv9ZwNjucMHVn85Ni7emAe9lKqZTnbB-gzTK0K1ChJdt9vIVYX9G37lvd9sPEKsxx664UJf1iVSs7RrU9kMz3lR24.woff2": "assets/0d5db068a22b810f_6NVf8FyLNQOQZAnv9ZwNjucMHVn85N.woff2", "https://micangasdacamila.vercel.app/assets/amostras/m01.webp": "assets/4d0ae2a6a62a98c9_m01.webp", "https://micangasdacamila.vercel.app/assets/amostras/m13.webp": "assets/a44234100bcbbbd4_m13.webp", "https://micangasdacamila.vercel.app/assets/amostras/m06.webp": "assets/6142d31cbfef5a27_m06.webp", "https://micangasdacamila.vercel.app/assets/amostras/m15.webp": "assets/6299ee8075d241c6_m15.webp", "https://micangasdacamila.vercel.app/assets/amostras/m10.webp": "assets/a73ff56a0fda2732_m10.webp", "https://micangasdacamila.vercel.app/assets/amostras/m04.webp": "assets/59f69d53ca7c2970_m04.webp", "https://pay.wiapy.com/Pp1tgWLL7fXt?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=": "assets/b21a37f2416c94e3_Pp1tgWLL7fXt.html"};
 // Adiciona chave alternativa para o novo checkout PerfectPay (R$8,90)
 try {
@@ -123,6 +151,25 @@ window.__rewriteSrcset = rewriteSrcset;
 })();</script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
+<script>
+(function () {
+  document.addEventListener('contextmenu', function (event) { event.preventDefault(); });
+  document.addEventListener('selectstart', function (event) { event.preventDefault(); });
+  document.addEventListener('dragstart', function (event) { event.preventDefault(); });
+  document.addEventListener('copy', function (event) { event.preventDefault(); });
+  document.addEventListener('cut', function (event) { event.preventDefault(); });
+  document.addEventListener('keydown', function (event) {
+    var key = (event.key || '').toLowerCase();
+    if (key === 'f12' ||
+      (event.ctrlKey && ['a', 'c', 's', 'u', 'p'].indexOf(key) !== -1) ||
+      (event.ctrlKey && event.shiftKey && ['i', 'j', 'c'].indexOf(key) !== -1) ||
+      (event.metaKey && ['a', 'c', 's', 'u', 'p'].indexOf(key) !== -1)) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }, true);
+})();
+</script>
 <meta content="noindex" name="robots"/>
 <title>Espera! Oferta única — 100 Projetos de Brincos de Miçanga por R$ 8,90</title>
 <!-- Meta Pixel Code -->
