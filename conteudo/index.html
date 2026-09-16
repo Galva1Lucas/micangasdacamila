@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head><script data-offline-resolve="1">(function(){
-var ASSET_MAP = {"https://micangasdacamila.vercel.app/": "index.html"};
+var ASSET_MAP = {"https://micangasdacamila.vercel.app/upsell2?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=": "assets/3de2524c95d49abf_dows.html", "https://cdn.utmify.com.br/scripts/utms/latest.js": "assets/599af0d6ba0795a3_latest.js", "https://micangasdacamila.vercel.app/upsell2/assets/ups/dep2.webp": "assets/53adaaca1d5ac3a5_dep2.webp", "https://micangasdacamila.vercel.app/upsell2/assets/ups/garantia.webp": "assets/da5cf79193a41cc1_garantia.webp", "https://micangasdacamila.vercel.app/upsell2/assets/ups/dep3.webp": "assets/51c5f737d03cc0aa_dep3.webp", "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap": "assets/5dc7b53a81e0e77c_css2.css", "https://fonts.gstatic.com/s/ibmplexsans/v23/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxeKYbSB4Zh.woff2": "assets/056e4e2459f57a00_zYXzKVElMYYaJe8bpLHnCwDKr932-G.woff2", "https://fonts.gstatic.com/s/bricolagegrotesque/v9/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2": "assets/85f55a58a31e61a2_3y9K6as8bTXq_nANBjzKo3IeZx8z6u.woff2", "https://micangasdacamila.vercel.app/upsell2/assets/ups/video.webp": "assets/fcf9979fac1548d6_video.webp", "https://micangasdacamila.vercel.app/upsell2/assets/ups/dep1.webp": "assets/106449b39d83646c_dep1.webp", "https://micangasdacamila.vercel.app/?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=": "assets/467f887cfcca25b4_file.html", "https://go.perfectpay.com.br/PPU38CQG7CQ": "assets/b578c28f0f8cabc9_6aa1e08aa3b1f406fa7ab24d.html", "https://go.perfectpay.com.br/PPU38CQG7CQ?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=": "assets/48b53d80c90a703f_6aa1e08aa3b1f406fa7ab24d.html"};
 // Pre-populate path+query keys: when opened via file://, JS
 // resolves '/foo.js' against file://… so we lose the original
 // origin. Indexing by pathname+search lets the lookup succeed.
@@ -120,19 +120,19 @@ window.__rewriteSrcset = rewriteSrcset;
 <meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
 <meta content="#e5446e" name="theme-color"/>
 <meta content="noindex,nofollow" name="robots"/>
-<title>Oferta única · Miçangas na Prática</title>
-<link href="/upsell/assets/favicon.png" rel="icon"/>
+<title>Última chance · Miçangas na Prática</title>
+<link href="/conteudo/assets/favicon.png" rel="icon"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="/upsell/assets/5dc7b53a81e0e77c_css2.css" media="all" onload="this.media='all'" rel="stylesheet"/>
-<noscript><link href="/upsell/assets/5dc7b53a81e0e77c_css2.css" rel="stylesheet"/></noscript>
+<link href="/conteudo/assets/5dc7b53a81e0e77c_css2.css" media="all" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="/conteudo/assets/5dc7b53a81e0e77c_css2.css" rel="stylesheet"/></noscript>
 <!-- SDK do Wiapy: é ele que define initWiapyUpsell(), usado lá embaixo para desenhar
      o botão de aceite e o de recusa. SEM ELE A FUNÇÃO NÃO EXISTE e nenhum botão
      aparece — a página cai no botão de reserva que está no HTML.
      >>> CONFIRMAR A URL NO PAINEL DA WIAPY: é a linha que eles mandam colar no <head>. -->
 <script async="" src="https://wiapy.com/js/upsell.js"></script>
 <!-- UTMify: o mesmo script da index, para a venda do upsell cair no mesmo painel -->
-<script async="" data-utmify-prevent-subids="" data-utmify-prevent-xcod-sck="" defer="" src="/upsell/assets/599af0d6ba0795a3_latest.js"></script>
+<script async="" data-utmify-prevent-subids="" data-utmify-prevent-xcod-sck="" defer="" src="/conteudo/assets/599af0d6ba0795a3_latest.js"></script>
 <style>
 :root{
   --rosa:#ec3a72; --rosa-esc:#cc2f58; --rosa-fundo:#fff5f8; --rosa-linha:#f5d4de;
@@ -197,11 +197,15 @@ img{display:block; max-width:100%}
   box-shadow:0 4px 12px rgba(236,58,114,.28);
 }
 .ob-upsell__headline{
-  font-family:var(--serif); font-weight:800; font-size:27px; line-height:1.18;
+  font-family:var(--serif); font-weight:800; font-size:28px; line-height:1.18;
   letter-spacing:-.8px; color:var(--tinta); margin:0 0 22px; text-wrap:balance;
 }
 /* o ::after fica atrás do texto: por isso o em precisa de isolation, senão o
    z-index:-1 some por baixo do fundo da página em vez de ficar sob a palavra */
+.ob-upsell__headline .linha-2{
+  display:block; margin-top:9px;
+  font-size:.95em; font-weight:600; line-height:1.28; letter-spacing:-.4px;
+}
 .ob-upsell__headline em{
   font-style:normal; color:var(--rosa); position:relative; white-space:nowrap; isolation:isolate;
 }
@@ -217,6 +221,7 @@ img{display:block; max-width:100%}
   font-size:15px; line-height:1.6; color:var(--tinta-2); text-wrap:pretty;
 }
 .ob-upsell__intro strong{font-weight:600; color:var(--rosa)}
+.ob-upsell__intro em{font-style:normal; font-weight:600; color:var(--tinta)}
 .titulo-lista{
   font-family:var(--serif); font-weight:800; font-size:19px; line-height:1.25;
   letter-spacing:-.5px; color:var(--tinta); text-align:center;
@@ -341,13 +346,50 @@ img{display:block; max-width:100%}
 .barra-fixa .val b{font-family:var(--serif); font-weight:800; font-size:19px; color:var(--rosa); letter-spacing:-.5px}
 .barra-fixa .cta{margin:0; flex:1; padding:14px 12px; font-size:14.5px; animation:none}
 
+/* ── confirmação da recusa ── */
+.modal{
+  position:fixed; inset:0; z-index:60;
+  background:rgba(12,16,28,.62); backdrop-filter:blur(3px);
+  display:flex; align-items:center; justify-content:center; padding:18px;
+  animation:aparece .18s ease;
+}
+.modal[hidden]{display:none}
+@keyframes aparece{from{opacity:0}}
+.modal-caixa{
+  width:100%; max-width:360px; background:#fff; border-radius:18px;
+  padding:26px 22px 22px; text-align:center;
+  box-shadow:0 24px 60px rgba(12,16,28,.34);
+  animation:sobe .24s cubic-bezier(.2,.8,.3,1);
+}
+@keyframes sobe{from{transform:translateY(14px) scale(.97); opacity:0}}
+.modal-ico{
+  width:56px; height:56px; border-radius:50%; margin:0 auto 14px;
+  background:#fff2f6; color:var(--rosa);
+  display:flex; align-items:center; justify-content:center;
+}
+.modal-ico svg{width:27px; height:27px}
+.modal-caixa h3{
+  font-family:var(--serif); font-weight:800; font-size:21px; line-height:1.2;
+  letter-spacing:-.5px; color:var(--tinta); margin:0 0 9px;
+}
+.modal-caixa p{
+  margin:0 0 18px; font-size:14px; line-height:1.6; color:var(--tinta-2); text-wrap:pretty;
+}
+.modal-caixa p strong{color:var(--tinta); font-weight:600}
+.modal-caixa .cta{margin-top:0}
+.modal-nao{
+  display:block; margin-top:13px; padding:6px;
+  font-size:13.5px; color:var(--cinza); text-decoration:underline; text-underline-offset:3px;
+}
+.modal-nao:hover{color:var(--tinta-2)}
+
 .rodape{
   text-align:center; padding:26px 16px calc(20px + env(safe-area-inset-bottom));
   font-size:11.5px; line-height:1.6; color:#9aa1ad;
 }
 
 @media (max-width:400px){
-  .ob-upsell__headline{font-size:23px; letter-spacing:-.6px}
+  .ob-upsell__headline{font-size:24px; letter-spacing:-.6px}
   .ob-upsell__intro{font-size:14.5px}
   .ob-upsell__item p{font-size:13.5px}
   .oferta .por b{font-size:36px}
@@ -369,9 +411,9 @@ html,body{opacity:1!important;visibility:visible!important}
 <div class="env">
 <b id="rotulo-tempo">OFERTA EXPIRA EM</b>
 <div class="relogio" id="relogio">
-<span class="digito" id="d1">0</span><span class="digito" id="d2">6</span>
+<span class="digito" id="d1">0</span><span class="digito" id="d2">0</span>
 <span class="doispontos">:</span>
-<span class="digito" id="d3">4</span><span class="digito" id="d4">7</span>
+<span class="digito" id="d3">4</span><span class="digito" id="d4">4</span>
 </div>
 </div>
 </div>
@@ -379,37 +421,39 @@ html,body{opacity:1!important;visibility:visible!important}
 <div class="aprovado">
 <div class="env">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6" viewbox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg>
-<span>Pagamento aprovado! Seu acesso já está a caminho do seu e-mail.</span>
+<span>Seu acesso aos projetos está garantido. Falta só isto:</span>
 </div>
 </div>
 <!-- ═════════ o upsell ═════════ -->
 <div class="ob-upsell">
-<span class="ob-upsell__tag">45 vídeoaulas</span>
+<span class="ob-upsell__tag">Pela metade do preço!</span>
 <h2 class="ob-upsell__headline">
-    Não fique presa só aos <em>gráficos</em>! Veja cada montagem <em>na prática</em>
+    TEM <em>CERTEZA</em> DISSO?<br/>
+<span class="linha-2">As vídeoaulas podem ser <em>vitais para iniciantes</em></span>
 </h2>
 <div class="ob-upsell__media">
-<img alt="Videoaulas de miçangas passo a passo" height="507" src="/upsell/assets/fcf9979fac1548d6_video.webp" width="900"/>
+<img alt="Videoaulas de miçangas passo a passo" height="507" src="/conteudo/assets/fcf9979fac1548d6_video.webp" width="900"/>
 </div>
 <p class="ob-upsell__intro">
-    Tenha acesso a <strong>45 videoaulas</strong> mostrando na prática a montagem,
-    passagem do fio, franjas e acabamento. Assista, acompanhe e faça junto.
+    O gráfico mostra <em>onde</em> cada miçanga vai — mas não mostra <em>como</em> a
+    agulha entra. É aí que a maioria trava na primeira peça. Por isso estou refazendo
+    a oferta <strong>pela metade do preço</strong>, e só agora.
   </p>
 <!-- preço + botão do gateway, logo depois da promessa e antes dos detalhes -->
 <div class="oferta" id="btn-sim">
-<div class="de">De <s>R$ 79,90</s></div>
-<div class="por"><span>Por apenas</span><b>R$ 19,90</b></div>
-<div class="parcela">à vista no Pix ou em até 3x no cartão</div>
+<div class="de">De <s>R$ 19,90</s></div>
+<div class="por"><span>Por apenas</span><b>R$ 9,90</b></div>
+<div class="parcela">pagamento único, no Pix ou no cartão</div>
 <!-- o Wiapy desenha aqui o botão de aceite e o link de recusa -->
-<div id="wiapy_upsell"><a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CP">SIM, EU QUERO A OFERTA</a><a class="recusar" href="https://micangasdacamila.vercel.app/upsell2?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">Eu não quero a oferta</a></div>
+<div id="wiapy_upsell"><a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ">SIM, EU ACEITO ESSA OFERTA</a><a class="recusar" href="https://clubedacah.vercel.app/?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">Recusar está oferta</a></div>
 <!-- reserva: se o SDK não carregar, o link continua clicável em vez de sumir -->
-<noscript><a class="cta" href="https://go.perfectpay.com.br/PPU38CQG7CP">SIM, EU QUERO A OFERTA</a></noscript>
+<noscript><a class="cta" href="https://go.perfectpay.com.br/PPU38CQG7CQ">SIM, EU ACEITO ESSA OFERTA</a></noscript>
 <div class="selo-seguro">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><rect height="11" rx="2.5" width="16" x="4" y="10"></rect><path d="M8 10V7a4 4 0 018 0v3"></path></svg>
       Compra segura · acesso imediato
     </div>
 </div>
-<h3 class="titulo-lista">O que você vai ver nas aulas</h3>
+<h3 class="titulo-lista">O que você deixa de fora sem elas</h3>
 <div class="ob-upsell__list">
 <div class="ob-upsell__item">
 <span class="ob-upsell__icon"><svg aria-hidden="true" fill="none" viewbox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4"></path></svg></span>
@@ -434,7 +478,7 @@ html,body{opacity:1!important;visibility:visible!important}
 <h3 class="secao-titulo">Quem já está fazendo</h3>
 <div class="dep">
 <div class="dep-topo">
-<img alt="" height="42" loading="lazy" src="/upsell/assets/106449b39d83646c_dep1.webp" width="42"/>
+<img alt="" height="42" loading="lazy" src="/conteudo/assets/106449b39d83646c_dep1.webp" width="42"/>
 <div>
 <div class="dep-nome">Verônica S. Cardoso</div>
 <div class="dep-estrelas">★★★★★</div>
@@ -444,7 +488,7 @@ html,body{opacity:1!important;visibility:visible!important}
 </div>
 <div class="dep">
 <div class="dep-topo">
-<img alt="" height="42" loading="lazy" src="/upsell/assets/53adaaca1d5ac3a5_dep2.webp" width="42"/>
+<img alt="" height="42" loading="lazy" src="/conteudo/assets/53adaaca1d5ac3a5_dep2.webp" width="42"/>
 <div>
 <div class="dep-nome">Viviane L. Francisco</div>
 <div class="dep-estrelas">★★★★★</div>
@@ -454,7 +498,7 @@ html,body{opacity:1!important;visibility:visible!important}
 </div>
 <div class="dep">
 <div class="dep-topo">
-<img alt="" height="42" loading="lazy" src="/upsell/assets/51c5f737d03cc0aa_dep3.webp" width="42"/>
+<img alt="" height="42" loading="lazy" src="/conteudo/assets/51c5f737d03cc0aa_dep3.webp" width="42"/>
 <div>
 <div class="dep-nome">Bianca V. Müller</div>
 <div class="dep-estrelas">★★★★★</div>
@@ -464,7 +508,7 @@ html,body{opacity:1!important;visibility:visible!important}
 </div>
 <div class="garantia">
 <div class="garantia-topo">
-<img alt="Garantia de 7 dias" height="72" loading="lazy" src="/upsell/assets/da5cf79193a41cc1_garantia.webp" width="72"/>
+<img alt="Garantia de 7 dias" height="72" loading="lazy" src="/conteudo/assets/da5cf79193a41cc1_garantia.webp" width="72"/>
 <div class="garantia-txt">
 <b>Garantia de 7 dias</b>
 <p>Teste tudo por 7 dias. Se não for pra você, devolvemos <strong>100% do seu dinheiro</strong>, sem perguntas.</p>
@@ -474,14 +518,30 @@ html,body{opacity:1!important;visibility:visible!important}
 </div>
 </div>
 <p class="rodape">
-  Esta oferta aparece uma única vez, agora.<br/>
+  Última chamada: esta oferta não volta a aparecer.<br/>
   Miçangas da Juh · todos os direitos reservados
 </p>
+<!-- ═════════ confirmação da recusa ═════════ -->
+<div class="modal" hidden="" id="modal-certeza">
+<div aria-labelledby="modal-tit" aria-modal="true" class="modal-caixa" role="dialog">
+<div class="modal-ico">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M12 9v4.6"></path><circle cx="12" cy="17.3" fill="currentColor" r=".9" stroke="none"></circle><path d="M10.3 3.9L2.5 17.6A2 2 0 004.2 20.6h15.6a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"></path></svg>
+</div>
+<h3 id="modal-tit">Tem certeza mesmo?</h3>
+<p>
+      Esta é a <strong>última vez</strong> que as videoaulas aparecem por R$ 9,90.
+      Depois daqui elas voltam ao preço cheio — e a maioria das alunas só percebe
+      que precisava delas ao travar na primeira peça.
+    </p>
+<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ">Sim, eu vou precisar</a>
+<a class="modal-nao" href="https://clubedacah.vercel.app/?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">Não, eu assumo o risco</a>
+</div>
+</div>
 <!-- ═════════ barra fixa ═════════ -->
 <div class="barra-fixa" id="barra-fixa">
 <div class="env">
-<div class="val"><small>R$ 79,90</small><b>R$ 19,90</b></div>
-<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CP">SIM, EU ACEITO</a>
+<div class="val"><small>R$ 19,90</small><b>R$ 9,90</b></div>
+<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ">SIM, EU ACEITO</a>
 </div>
 </div>
 <!-- ══════════ botão do gateway ══════════
@@ -491,25 +551,53 @@ html,body{opacity:1!important;visibility:visible!important}
 <script>
 if (typeof initWiapyUpsell === 'function') {
   initWiapyUpsell({
-    linkUrl: "https://go.perfectpay.com.br/PPU38CQG7CP",
-    linkText: "SIM, EU QUERO A OFERTA",
+    linkUrl: "https://go.perfectpay.com.br/PPU38CQG7CQ",
+    linkText: "SIM, EU ACEITO ESSA OFERTA",
     styles: {
       backgroundColor: "#00d769",
       hoverBackgroundColor: "#00b85a",
       fontSize: "17px",
       borderRadius: "10px"
     },
-    refusalLinkUrl: "https://micangasdacamila.vercel.app/upsell2",
-    refusalLinkText: "Eu não quero a oferta",
+    refusalLinkUrl: "https://clubedacah.vercel.app/",
+    refusalLinkText: "Recusar está oferta",
     refusalLinkColor: "#000000"
   });
 } else {
   // o SDK não chegou: desenha o mesmo par de links à mão, para a página nunca
   // ficar sem caminho de saída
   document.getElementById('wiapy_upsell').innerHTML =
-    '<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CP">SIM, EU QUERO A OFERTA</a>' +
-    '<a class="recusar" href="https://micangasdacamila.vercel.app/upsell2">Eu não quero a oferta</a>';
+    '<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ">SIM, EU ACEITO ESSA OFERTA</a>' +
+    '<a class="recusar" href="https://clubedacah.vercel.app/">Recusar está oferta</a>';
 }
+</script>
+<!-- ══════════ a recusa passa pelo popup ══════════
+     O link de recusa é desenhado pelo SDK do Wiapy, então ele não existe no
+     HTML: aparece dentro de #wiapy_upsell depois que o script roda. Por isso a
+     captura é por delegação no documento — pega o clique mesmo que o elemento
+     tenha nascido bem depois desta linha. -->
+<script>
+(function () {
+  var DESTINO = 'https://clubedacah.vercel.app/';
+  var modal = document.getElementById('modal-certeza');
+
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a');
+    if (!a || modal.contains(a)) return;              // dentro do popup, deixa passar
+    if ((a.getAttribute('href') || '').indexOf(DESTINO) !== 0) return;
+    e.preventDefault();
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }, true);
+
+  // clicar no fundo escuro fecha e devolve a pessoa para a oferta
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) { modal.hidden = true; document.body.style.overflow = ''; }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.hidden) { modal.hidden = true; document.body.style.overflow = ''; }
+  });
+})();
 </script>
 <script>
 /* ══════════════════════════════════════════════════════════════════
@@ -519,15 +607,15 @@ if (typeof initWiapyUpsell === 'function') {
    contador que renasce cheio é o que denuncia a contagem falsa.
    ══════════════════════════════════════════════════════════════════ */
 (function () {
-  var MIN = 7;
+  var SEG = 57;
   var fim;
   try {
-    fim = parseInt(sessionStorage.getItem('ups-fim') || '0', 10);
+    fim = parseInt(sessionStorage.getItem('dows-fim') || '0', 10);
     if (!fim || fim < Date.now()) {
-      fim = Date.now() + MIN * 60000;
-      sessionStorage.setItem('ups-fim', String(fim));
+      fim = Date.now() + SEG * 1000;
+      sessionStorage.setItem('dows-fim', String(fim));
     }
-  } catch (e) { fim = Date.now() + MIN * 60000; }
+  } catch (e) { fim = Date.now() + SEG * 1000; }
 
   var d = ['d1', 'd2', 'd3', 'd4'].map(function (x) { return document.getElementById(x); });
 
