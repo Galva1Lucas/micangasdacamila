@@ -481,7 +481,7 @@ src="https://www.facebook.com/tr?id=38187844357529790&ev=PageView&noscript=1"
   .seta-baixo{font-style:normal;font-family:var(--sans);color:var(--coral);
     font-size:.85em;animation:pula 1.8s ease-in-out infinite}
   @keyframes pula{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
-  @media(prefers-reduced-motion:reduce){.seta-baixo{animation:none}}
+  @media(prefers-reduced-motion:reduce){.seta-baixo,.plano.destaque .plano-preco{animation:none}}
 
   /* carrossel dos prints — desliza sozinho, mas continua arrastável */
   .provas{margin-top:18px;scroll-snap-type:none;scrollbar-width:none}
@@ -550,7 +550,15 @@ src="https://www.facebook.com/tr?id=38187844357529790&ev=PageView&noscript=1"
   .oferta{background:#fff}
   .planos{display:grid;grid-template-columns:1fr 1.12fr;gap:22px;margin-top:46px;align-items:start}
   .plano{background:#fff;border:1px solid var(--borda);border-radius:20px;padding:30px 26px;text-align:left}
-  .plano.destaque{border:2px solid var(--coral);box-shadow:0 20px 50px rgba(229,68,110,.16);position:relative;padding-top:38px}
+  .plano.destaque{background:linear-gradient(145deg,#123f47 0%,#0c3038 58%,#09252d 100%);border:2px solid #e5b94d;box-shadow:0 20px 50px rgba(9,55,64,.28);position:relative;padding-top:38px;color:#fff}
+  .plano.destaque .plano-nome{color:#fff}
+  .plano.destaque .linha-ancora s{color:#ff6b6b;font-weight:700}
+  .plano.destaque .plano-preco{font-size:clamp(56px,7vw,74px);color:#ffe08a;text-shadow:0 3px 18px rgba(255,210,86,.22);animation:pulsa-preco 2.2s ease-in-out infinite}
+  .plano.destaque .plano-preco small{color:#ffe08a}
+  .plano.destaque .plano-obs{color:#c9e2e3}
+  .plano.destaque .divisor{border-top-color:rgba(255,255,255,.2)}
+  .plano.destaque .inclui li,.plano.destaque .lista-bonus li{color:#f4fbfa}
+  @keyframes pulsa-preco{50%{transform:scale(1.045)}}
   .fita{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--coral);color:#fff;
     font-size:11.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
     padding:8px 18px;border-radius:100px;white-space:nowrap}
