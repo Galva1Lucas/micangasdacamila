@@ -445,7 +445,7 @@ html,body{opacity:1!important;visibility:visible!important}
 <div class="por"><span>Por apenas</span><b>R$ 14,99</b></div>
 <div class="parcela">pagamento único, no Pix ou no cartão</div>
 <!-- o Wiapy desenha aqui o botão de aceite e o link de recusa -->
-<div id="wiapy_upsell"><a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO ESSA OFERTA</a><a class="recusar" href="https://clubedacah.vercel.app/?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">Recusar está oferta</a></div>
+<div id="wiapy_upsell"><a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO ESSA OFERTA</a><a class="recusar" href="/conteudo-2k/recusa/">Recusar está oferta</a></div>
 <!-- reserva: se o SDK não carregar, o link continua clicável em vez de sumir -->
 <noscript><a class="cta" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO ESSA OFERTA</a></noscript>
 <div class="selo-seguro">
@@ -519,7 +519,7 @@ html,body{opacity:1!important;visibility:visible!important}
 </div>
 <p class="rodape">
   Última chamada: esta oferta não volta a aparecer.<br/>
-  Miçangas da Juh · todos os direitos reservados
+  Miçangas da Cah · todos os direitos reservados
 </p>
 <!-- ═════════ confirmação da recusa ═════════ -->
 <div class="modal" hidden="" id="modal-certeza">
@@ -559,7 +559,7 @@ if (typeof initWiapyUpsell === 'function') {
       fontSize: "17px",
       borderRadius: "10px"
     },
-    refusalLinkUrl: "https://clubedacah.vercel.app/",
+    refusalLinkUrl: "/conteudo-2k/recusa/",
     refusalLinkText: "Recusar está oferta",
     refusalLinkColor: "#000000"
   });
@@ -568,7 +568,7 @@ if (typeof initWiapyUpsell === 'function') {
   // ficar sem caminho de saída
   document.getElementById('wiapy_upsell').innerHTML =
     '<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO ESSA OFERTA</a>' +
-    '<a class="recusar" href="https://clubedacah.vercel.app/">Recusar está oferta</a>';
+    '<a class="recusar" href="/conteudo-2k/recusa/">Recusar está oferta</a>';
 }
 </script>
 <!-- ══════════ a recusa passa pelo popup ══════════
