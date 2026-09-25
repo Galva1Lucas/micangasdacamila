@@ -401,7 +401,7 @@ html,body{opacity:1!important;visibility:visible!important}
 <!-- preço + botão do gateway, logo depois da promessa e antes dos detalhes -->
 <div class="oferta" id="btn-sim">
 <div class="de">De <s>R$ 79,90</s></div>
-<div class="por"><span>Por apenas</span><b>R$ 19,90</b></div>
+<div class="por"><span>Por apenas</span><b>R$ 25,90</b></div>
 <div class="parcela">à vista no Pix ou em até 3x no cartão</div>
 <!-- o Wiapy desenha aqui o botão de aceite e o link de recusa -->
 <div id="wiapy_upsell"><a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CP?upsell=true">SIM, EU QUERO A OFERTA</a><a class="recusar" href="https://micangasdacamila.vercel.app/conteudo-2k?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">Eu não quero a oferta</a></div>
@@ -483,7 +483,7 @@ html,body{opacity:1!important;visibility:visible!important}
 <!-- ═════════ barra fixa ═════════ -->
 <div class="barra-fixa" id="barra-fixa">
 <div class="env">
-<div class="val"><small>R$ 79,90</small><b>R$ 19,90</b></div>
+<div class="val"><small>R$ 79,90</small><b>R$ 25,90</b></div>
 <a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CP?upsell=true">SIM, EU ACEITO</a>
 </div>
 </div>
@@ -502,7 +502,7 @@ if (typeof initWiapyUpsell === 'function') {
       fontSize: "17px",
       borderRadius: "10px"
     },
-    refusalLinkUrl: "https://micangasdacamila.vercel.app/conteudo-2k",
+    refusalLinkUrl: "https://micangasdacamila.vercel.app/conteudo-2k?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=",
     refusalLinkText: "Eu não quero a oferta",
     refusalLinkColor: "#000000"
   });
@@ -511,7 +511,7 @@ if (typeof initWiapyUpsell === 'function') {
   // ficar sem caminho de saída
   document.getElementById('wiapy_upsell').innerHTML =
     '<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CP?upsell=true">SIM, EU QUERO A OFERTA</a>' +
-    '<a class="recusar" href="https://micangasdacamila.vercel.app/conteudo-2k">Eu não quero a oferta</a>';
+    '<a class="recusar" href="https://micangasdacamila.vercel.app/conteudo-2k?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=">Eu não quero a oferta</a>';
 }
 </script>
 <script>
