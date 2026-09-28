@@ -126,11 +126,6 @@ window.__rewriteSrcset = rewriteSrcset;
 <link href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="/conteudo-2k/assets/5dc7b53a81e0e77c_css2.css" media="all" onload="this.media='all'" rel="stylesheet"/>
 <noscript><link href="/conteudo-2k/assets/5dc7b53a81e0e77c_css2.css" rel="stylesheet"/></noscript>
-<!-- SDK do Wiapy: é ele que define initWiapyUpsell(), usado lá embaixo para desenhar
-     o botão de aceite e o de recusa. SEM ELE A FUNÇÃO NÃO EXISTE e nenhum botão
-     aparece — a página cai no botão de reserva que está no HTML.
-     >>> CONFIRMAR A URL NO PAINEL DA WIAPY: é a linha que eles mandam colar no <head>. -->
-<script async="" src="https://wiapy.com/js/upsell.js"></script>
 <!-- UTMify: o mesmo script da index, para a venda do upsell cair no mesmo painel -->
 <script async="" data-utmify-prevent-subids="" data-utmify-prevent-xcod-sck="" defer="" src="/conteudo-2k/assets/599af0d6ba0795a3_latest.js"></script>
 <style>
@@ -278,8 +273,8 @@ img{display:block; max-width:100%}
   background:#00d769; box-shadow:0 8px 22px -5px rgba(0,180,90,.5); animation:none;
 }
 .cta-verde:hover{background:#00b85a}
-#wiapy_upsell{margin-top:15px}
-#wiapy_upsell a{display:block}
+.upsell-acoes{margin-top:15px}
+.upsell-acoes a{display:block}
 .oferta .de s{text-decoration:line-through}
 .selo-seguro{
   display:flex; align-items:center; justify-content:center; gap:6px;
@@ -444,10 +439,7 @@ html,body{opacity:1!important;visibility:visible!important}
 <div class="de">De <s>R$ 79,90</s></div>
 <div class="por"><span>Por apenas</span><b>R$ 14,99</b></div>
 <div class="parcela">pagamento único, no Pix ou no cartão</div>
-<!-- o Wiapy desenha aqui o botão de aceite e o link de recusa -->
-<div id="wiapy_upsell"><a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO ESSA OFERTA</a><a class="recusar" href="/conteudo-2k/recusa/">Recusar está oferta</a></div>
-<!-- reserva: se o SDK não carregar, o link continua clicável em vez de sumir -->
-<noscript><a class="cta" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO ESSA OFERTA</a></noscript>
+<div class="upsell-acoes"><a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO ESSA OFERTA</a><a class="recusar" href="/conteudo-2k/recusa/">Recusar está oferta</a></div>
 <div class="selo-seguro">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><rect height="11" rx="2.5" width="16" x="4" y="10"></rect><path d="M8 10V7a4 4 0 018 0v3"></path></svg>
       Compra segura · acesso imediato
@@ -533,7 +525,7 @@ html,body{opacity:1!important;visibility:visible!important}
       Depois daqui elas voltam ao preço cheio — e a maioria das alunas só percebe
       que precisava delas ao travar na primeira peça.
     </p>
-<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ">Sim, eu vou precisar</a>
+<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">Sim, eu vou precisar</a>
 <a class="modal-nao" href="https://clubedacah.vercel.app/?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=">Não, eu assumo o risco</a>
 </div>
 </div>
@@ -544,38 +536,7 @@ html,body{opacity:1!important;visibility:visible!important}
 <a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO</a>
 </div>
 </div>
-<!-- ══════════ botão do gateway ══════════
-     A recusa NÃO volta para o login da Wiapy: vai para o downsell, que é a próxima
-     oferta do funil. Enquanto /dows não existir, quem recusar cai num 404 — subir
-     as duas juntas, ou apontar a recusa para a área de membros. -->
-<script>
-if (typeof initWiapyUpsell === 'function') {
-  initWiapyUpsell({
-    linkUrl: "https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true",
-    linkText: "SIM, EU ACEITO ESSA OFERTA",
-    styles: {
-      backgroundColor: "#00d769",
-      hoverBackgroundColor: "#00b85a",
-      fontSize: "17px",
-      borderRadius: "10px"
-    },
-    refusalLinkUrl: "/conteudo-2k/recusa/",
-    refusalLinkText: "Recusar está oferta",
-    refusalLinkColor: "#000000"
-  });
-} else {
-  // o SDK não chegou: desenha o mesmo par de links à mão, para a página nunca
-  // ficar sem caminho de saída
-  document.getElementById('wiapy_upsell').innerHTML =
-    '<a class="cta cta-verde" href="https://go.perfectpay.com.br/PPU38CQG7CQ?upsell=true">SIM, EU ACEITO ESSA OFERTA</a>' +
-    '<a class="recusar" href="/conteudo-2k/recusa/">Recusar está oferta</a>';
-}
-</script>
-<!-- ══════════ a recusa passa pelo popup ══════════
-     O link de recusa é desenhado pelo SDK do Wiapy, então ele não existe no
-     HTML: aparece dentro de #wiapy_upsell depois que o script roda. Por isso a
-     captura é por delegação no documento — pega o clique mesmo que o elemento
-     tenha nascido bem depois desta linha. -->
+<!-- A recusa é um link estático; a captura por delegação também intercepta a oferta final. -->
 <script>
 (function () {
   var DESTINO = 'https://clubedacah.vercel.app/';
@@ -644,8 +605,6 @@ if (typeof initWiapyUpsell === 'function') {
   }, { threshold: 0 }).observe(alvo);
 })();
 
-/* o botão de aceite e o de recusa são desenhados pelo Wiapy (ou pela reserva
-   acima), então não há handler próprio aqui */
 </script>
 <script data-offline-fix="1">(function(){
 var IS_CSR = false;
