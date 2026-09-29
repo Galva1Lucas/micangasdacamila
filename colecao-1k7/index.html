@@ -387,7 +387,22 @@ html,body{opacity:1!important;visibility:visible!important}
 <script src="https://fast.wistia.com/player.js" async></script>
 <script src="https://fast.wistia.com/embed/2mn0vv5wel.js" async type="module"></script>
 <style>wistia-player[media-id='2mn0vv5wel']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/2mn0vv5wel/swatch'); display: block; filter: blur(5px); padding-top:203.06%; }</style>
-<wistia-player media-id="2mn0vv5wel" aspect="0.49247606019151846"></wistia-player>
+<wistia-player id="colecao-video" media-id="2mn0vv5wel" aspect="0.49247606019151846"></wistia-player>
+<script>
+  (function () {
+    var player = document.getElementById('colecao-video');
+    if (!player) return;
+
+    function iniciarVideo() {
+      if (typeof player.play === 'function') {
+        var resultado = player.play();
+        if (resultado && typeof resultado.catch === 'function') resultado.catch(function () {});
+      }
+    }
+
+    player.addEventListener('click', iniciarVideo);
+  })();
+</script>
 </div>
 <p class="ob-upsell__intro">
     Tenha acesso a <strong>45 videoaulas</strong> mostrando na prática a montagem,
