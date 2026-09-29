@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101010" />
+  <meta name="description" content="Condição especial para ter acesso ao Pack com mais de 100 projetos de brincos de miçangas." />
+  <title>Condição especial | Projetos de Brincos de Miçangas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="assets/00aab67f1154b26c_css2.css" />
+  <style>
+    :root {
+      --coral: #E5446E;
+      --coral-esc: #C32E56;
+      --coral-nevoa: #FDEFF3;
+      --turq: #12707C;
+      --turq-esc: #0B5158;
+      --verde: #1FA463;
+      --verde-esc: #178A52;
+      --mostarda: #F0A81E;
+      --tinta: #233039;
+      --cinza: #5F7079;
+      --creme: #FDF9F4;
+      --borda: #EFE6DC;
+      --sans: "Inter", system-ui, sans-serif;
+      --serif: "Fraunces", Georgia, serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      background: #fff;
+      color: var(--tinta);
+      font-family: var(--sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .alerta {
+      padding: 15px 18px;
+      background: #101010;
+      color: #fff;
+      text-align: center;
+    }
+
+    .alerta p {
+      max-width: 900px;
+      margin: 0 auto;
+      font-size: clamp(13px, 2.4vw, 16px);
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .alerta strong { color: #FFE08A; }
+
+    main {
+      width: min(100% - 32px, 760px);
+      margin: 0 auto;
+      padding: clamp(25px, 5vw, 46px) 0 40px;
+    }
+
+    .selecao {
+      margin-bottom: 25px;
+      padding: 17px 20px;
+      border-radius: 12px;
+      background: var(--coral);
+      box-shadow: 0 10px 24px rgba(195, 46, 86, .2);
+      color: #fff;
+      text-align: center;
+    }
+
+    .selecao h1 {
+      margin: 0;
+      font-size: clamp(22px, 5vw, 34px);
+      font-weight: 800;
+      line-height: 1.16;
+    }
+
+    .conteudo { text-align: center; }
+
+    .texto-oferta {
+      max-width: 680px;
+      margin: 0 auto;
+      font-size: clamp(15px, 2.5vw, 18px);
+      line-height: 1.7;
+      text-align: left;
+    }
+
+    .texto-oferta p { margin: 0 0 15px; }
+    .texto-oferta strong { color: var(--turq-esc); }
+    .texto-oferta .pack { color: var(--coral-esc); }
+
+    .preco-box {
+      margin: 25px auto 22px;
+      padding: 20px 16px 22px;
+      border: 1px solid #F3CBD5;
+      border-radius: 14px;
+      background: var(--coral-nevoa);
+    }
+
+    .preco-antigo {
+      margin: 0;
+      color: var(--cinza);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .preco-antigo s { color: var(--coral-esc); }
+
+    .preco-atual {
+      margin: 4px 0 0;
+      color: var(--coral-esc);
+      font-size: clamp(48px, 10vw, 68px);
+      font-weight: 800;
+      line-height: 1.05;
+    }
+
+    .preco-atual small {
+      margin-right: 4px;
+      font-size: .42em;
+      vertical-align: top;
+    }
+
+    .aviso-urgencia {
+      color: var(--coral-esc);
+      font-weight: 700;
+    }
+
+    .chamada {
+      margin: 22px auto 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .acoes { display: grid; gap: 13px; }
+
+    .botao {
+      display: flex;
+      width: 100%;
+      min-height: 64px;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 20px;
+      border: 0;
+      border-radius: 12px;
+      color: #fff;
+      font-family: var(--sans);
+      font-size: clamp(15px, 3.5vw, 18px);
+      font-weight: 800;
+      line-height: 1.3;
+      text-align: center;
+      text-decoration: none;
+      transition: background .16s, transform .16s, box-shadow .16s;
+    }
+
+    .botao-aceitar {
+      background: var(--verde);
+      box-shadow: 0 7px 22px rgba(31, 164, 99, .32);
+      animation: brilho 2.2s ease-in-out infinite;
+    }
+
+    .botao-aceitar:hover {
+      transform: translateY(-2px);
+      background: var(--verde-esc);
+      box-shadow: 0 10px 27px rgba(31, 164, 99, .4);
+      animation: none;
+    }
+
+    .botao-recusar {
+      min-height: 54px;
+      background: var(--coral-esc);
+      box-shadow: 0 4px 12px rgba(195, 46, 86, .16);
+      font-size: clamp(13px, 3.2vw, 16px);
+    }
+
+    .botao-recusar:hover { background: #A92549; }
+
+    .botao:focus-visible, footer a:focus-visible {
+      outline: 3px solid var(--turq);
+      outline-offset: 4px;
+    }
+
+    @keyframes brilho {
+      0%, 100% { box-shadow: 0 0 0 2px rgba(31, 164, 99, .1), 0 7px 22px rgba(31, 164, 99, .3); }
+      50% { box-shadow: 0 0 0 5px rgba(31, 164, 99, .16), 0 10px 29px rgba(31, 164, 99, .44); }
+    }
+
+    .garantia {
+      margin-top: 31px;
+      padding: clamp(21px, 4vw, 30px);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      background: var(--creme);
+      text-align: center;
+    }
+
+    .garantia h2 {
+      margin: 0 0 8px;
+      color: var(--turq-esc);
+      font-size: clamp(20px, 4vw, 25px);
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .garantia p {
+      max-width: 650px;
+      margin: 0 auto;
+      color: var(--cinza);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .garantia strong { color: var(--turq-esc); }
+    .garantia .risco-zero { color: var(--coral-esc); }
+
+    footer {
+      padding: 21px 18px 26px;
+      border-top: 1px solid var(--borda);
+      background: #fff;
+      color: var(--cinza);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    footer p { margin: 0 0 8px; }
+    footer a { color: var(--turq); text-underline-offset: 3px; }
+    .separador { padding: 0 7px; color: #A7B1B5; }
+
+    @media (max-width: 480px) {
+      .alerta { padding-inline: 14px; }
+      main { width: min(100% - 28px, 760px); }
+      .selecao { padding: 15px 13px; }
+      .texto-oferta p { margin-bottom: 13px; }
+      .botao-aceitar { min-height: 60px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="alerta">
+    <p><strong>AS INFORMAÇÕES ABAIXO SÃO CONFIDENCIAIS!</strong> NÃO COMPARTILHE COM NINGUÉM!</p>
+  </header>
+
+  <main>
+    <section class="selecao" aria-labelledby="titulo-selecao">
+      <h1 id="titulo-selecao">ESPERE! VOCÊ FOI SELECIONADO!</h1>
+    </section>
+
+    <section class="conteudo" aria-label="Oferta especial">
+      <div class="texto-oferta">
+        <p>Volto a ressaltar que eu não quero que o preço seja um empecilho para você ter todos os <strong>projetos de brincos de miçangas</strong> que precisa para acelerar o seu resultado.</p>
+        <p>Por isso eu resolvi fazer algo que eu não faço pra qualquer um...</p>
+        <p>Vou te dar um desconto imediato no <strong class="pack">Pack +100 Projetos de Brincos de Miçangas</strong>, com todo o passo a passo detalhado para você aplicar do jeito certo e criar suas peças sem complicação...</p>
+        <p class="chamada">Tudo isso por apenas:</p>
+      </div>
+
+      <div class="preco-box" aria-label="Preço especial de R$ 19,90, de R$ 97,00">
+        <p class="preco-antigo"><s>De R$ 97,00</s> por</p>
+        <p class="preco-atual"><small>R$</small>19,90</p>
+      </div>
+
+      <div class="texto-oferta">
+        <p class="aviso-urgencia">Mas você precisa agir agora, caso contrário, serei obrigado a repassar essa condição especial para o próximo integrante que precisar desse material...</p>
+        <p class="chamada">Clique no botão abaixo para garantir o seu acesso com desconto exclusivo:</p>
+      </div>
+
+      <div class="acoes">
+        <!-- Substitua pelos links reais de checkout e próxima etapa. -->
+        <a class="botao botao-aceitar" href="https://go.perfectpay.com.br/PPU38CQGJEI">ACEITO O ACESSO POR R$ 19,90</a>
+        <a class="botao botao-recusar" href="colecao-1k7/">NÃO QUERO OS 100 PROJETOS AGORA</a>
+      </div>
+
+      <section class="garantia" aria-labelledby="titulo-garantia">
+        <h2 id="titulo-garantia">Isso mesmo! O risco é todo nosso!</h2>
+        <p>Você tem <strong>7 dias de garantia</strong> no material. Se por qualquer motivo você sentir que não é para você, é só pedir e nós <strong>devolvemos 100%</strong> do seu dinheiro, sem qualquer burocracia. Essa é a verdadeira garantia <strong class="risco-zero">RISCO ZERO!</strong></p>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p>Todos os Direitos Reservados</p>
+    <a href="https://SEU-SITE.com/politica-de-privacidade">Política de Privacidade</a>
+    <span class="separador" aria-hidden="true">|</span>
+    <a href="https://SEU-SITE.com/termos-de-uso">Termos de uso</a>
+  </footer>
+</body>
+</html>
