@@ -146,6 +146,39 @@
 
     .produto img { display: block; width: 100%; height: auto; }
 
+    .preco-box {
+      display: block;
+      margin: 0 auto 22px;
+      padding: 16px 20px 18px;
+      border: 1px solid #F3CBD5;
+      border-radius: 14px;
+      background: var(--coral-nevoa);
+      text-align: center;
+    }
+
+    .preco-antigo {
+      margin: 0;
+      color: var(--cinza);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .preco-antigo s { color: var(--coral-esc); }
+
+    .preco-atual {
+      margin: 4px 0 0;
+      color: var(--coral-esc);
+      font-size: clamp(42px, 9vw, 58px);
+      font-weight: 800;
+      line-height: 1.05;
+    }
+
+    .preco-atual small {
+      margin-right: 4px;
+      font-size: .42em;
+      vertical-align: top;
+    }
+
     .cta {
       display: flex;
       min-height: 68px;
@@ -223,6 +256,10 @@
       .seguranca { gap: 7px; }
     }
 
+    @media (max-width: 767px) {
+      .preco-box { display: none; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
@@ -251,6 +288,11 @@
       <figure class="produto">
         <img src="../assets/upsel1.webp" alt="Apresentação dos projetos de brincos de miçangas" fetchpriority="high" />
       </figure>
+
+      <div class="preco-box" aria-label="De R$ 89,00 por R$ 27,89">
+        <p class="preco-antigo"><s>De R$ 89,00</s> por</p>
+        <p class="preco-atual"><small>R$</small>27,89</p>
+      </div>
 
       <!-- Troque os dois endereços abaixo pelos links reais do checkout e da próxima etapa. -->
       <a class="cta" href="https://go.perfectpay.com.br/PPU38CQGJEH?utm_source=organic&amp;utm_campaign=&amp;utm_medium=&amp;utm_content=&amp;utm_term=&amp;upsell=true">SIM, QUERO O ACOMPANHAMENTO</a>
