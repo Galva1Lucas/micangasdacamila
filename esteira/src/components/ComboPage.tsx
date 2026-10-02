@@ -34,7 +34,8 @@ export const ComboPage: React.FC<ComboPageProps> = ({
 
   const handleCtaClick = () => {
     if (checkoutUrl && checkoutUrl.trim() !== '') {
-      window.open(checkoutUrl, '_blank');
+      window.location.assign(checkoutUrl);
+      return;
     }
     onAccept();
   };

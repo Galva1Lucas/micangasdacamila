@@ -20,8 +20,8 @@ export const UpsellPage: React.FC<UpsellPageProps> = ({
 
   const handleCtaClick = () => {
     if (checkoutUrl && checkoutUrl.trim() !== '') {
-      // If external checkout url is configured
-      window.open(checkoutUrl, '_blank');
+      window.location.assign(checkoutUrl);
+      return;
     }
     onAccept();
   };
