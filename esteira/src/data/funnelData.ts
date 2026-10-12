@@ -674,7 +674,7 @@ export const FUNNEL_PAGES: FunnelPageData[] = [
       numericPrice: 77.0,
     },
     ctaText: '🔥 SIM, QUERO TUDO POR R$77',
-    declineText: 'Não, quero ficar só com os 100 projetos'
+    declineText: 'Não, quero ficar só com os 100 projetos',
     footerGuarantee: '🔒 Compra segura · 🛡️ Garantia de 7 dias · ⚡ Acesso imediato no mesmo e-mail',
     timerDurationSeconds: 300,
     nextStepOnAccept: 'success',
